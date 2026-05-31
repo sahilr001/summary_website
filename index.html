@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Readback — podcasts, as documents you can actually read</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF6EE; --paper-2:#F2EADA; --card:#FFFDF8;
+    --ink:#1B1714; --ink-soft:#6B6256; --ink-faint:#9A9081;
+    --accent:#BE451E; --accent-soft:#F3DACE;
+    --line:rgba(27,23,20,0.12); --line-soft:rgba(27,23,20,0.07);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Hanken Grotesk",sans-serif; font-size:17px; line-height:1.6;
+    background-image:radial-gradient(var(--line-soft) 1px,transparent 1px);
+    background-size:26px 26px;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  header{display:flex;justify-content:space-between;align-items:center;padding:28px 0}
+  .mark{font-family:"Fraunces",serif;font-weight:500;font-size:22px;letter-spacing:-0.01em}
+  .mark span{color:var(--accent)}
+  .beta{font-size:13px;color:var(--ink-soft);border:1px solid var(--line);
+    padding:5px 11px;border-radius:99px}
+
+  .hero{padding:46px 0 26px;max-width:680px}
+  .eyebrow{font-size:14px;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:18px}
+  h1{font-family:"Fraunces",serif;font-weight:400;font-size:clamp(38px,6vw,62px);
+    line-height:1.04;letter-spacing:-0.02em;margin-bottom:22px}
+  h1 em{font-style:italic;color:var(--accent)}
+  .sub{font-size:19px;color:var(--ink-soft);max-width:540px;margin-bottom:34px}
+
+  .form{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;max-width:560px;box-shadow:0 1px 0 rgba(27,23,20,0.03)}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:6px;font-weight:500}
+  .field input{width:100%;font:inherit;font-size:16px;color:var(--ink);
+    background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    padding:13px 14px;transition:border-color .15s,box-shadow .15s}
+  .field input::placeholder{color:var(--ink-faint)}
+  .field input:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft)}
+  button{font:inherit;cursor:pointer;border:none}
+  .submit{width:100%;background:var(--ink);color:var(--paper);font-weight:600;
+    font-size:16px;padding:14px;border-radius:10px;transition:transform .08s,opacity .15s}
+  .submit:hover{opacity:.92}
+  .submit:active{transform:scale(.99)}
+  .submit:disabled{opacity:.5;cursor:default}
+  .formnote{font-size:13px;color:var(--ink-faint);margin-top:12px;text-align:center}
+  .formnote b{color:var(--ink-soft);font-weight:600}
+  .msg{margin-top:14px;font-size:15px;padding:12px 14px;border-radius:10px;display:none}
+  .msg.ok{display:block;background:#EAF3E6;color:#2F5A22;border:1px solid #CADFBE}
+  .msg.err{display:block;background:#FBEAE4;color:#943219;border:1px solid #F0CDBE}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;
+    padding:60px 0;border-top:1px solid var(--line);margin-top:64px}
+  .step .n{font-family:"Fraunces",serif;font-size:15px;color:var(--accent);
+    font-weight:500;margin-bottom:10px}
+  .step h3{font-family:"Fraunces",serif;font-weight:500;font-size:19px;margin-bottom:7px}
+  .step p{font-size:15px;color:var(--ink-soft)}
+
+  .pricing{padding:18px 0 70px}
+  .pricing h2{font-family:"Fraunces",serif;font-weight:400;font-size:34px;
+    letter-spacing:-0.015em;margin-bottom:8px}
+  .pricing .lede{color:var(--ink-soft);margin-bottom:30px}
+  .plans{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .plan.pro{border:2px solid var(--accent)}
+  .plan .tag{font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:14px}
+  .plan.pro .tag{color:var(--accent)}
+  .price{font-family:"Fraunces",serif;font-size:42px;font-weight:400;letter-spacing:-0.02em}
+  .price small{font-size:16px;color:var(--ink-soft);font-family:"Hanken Grotesk",sans-serif}
+  .plan ul{list-style:none;margin:18px 0 24px}
+  .plan li{font-size:15px;color:var(--ink-soft);padding:6px 0 6px 24px;position:relative}
+  .plan li::before{content:"";position:absolute;left:2px;top:13px;width:9px;height:9px;
+    border-radius:50%;background:var(--accent-soft);border:1px solid var(--accent)}
+  .plan .cta{width:100%;padding:13px;border-radius:10px;font-weight:600;font-size:15px}
+  .plan.free .cta{background:var(--paper-2);color:var(--ink);border:1px solid var(--line)}
+  .plan.pro .cta{background:var(--accent);color:#fff;transition:transform .08s,opacity .15s}
+  .plan.pro .cta:hover{opacity:.92}
+  .plan.pro .cta:active{transform:scale(.99)}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 50px;font-size:14px;color:var(--ink-faint)}
+
+  .reveal{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .d1{animation-delay:.05s}.d2{animation-delay:.13s}.d3{animation-delay:.21s}.d4{animation-delay:.29s}
+
+  @media(max-width:680px){
+    .steps{grid-template-columns:1fr;gap:30px}
+    .plans{grid-template-columns:1fr}
+    h1{font-size:40px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="reveal d1">
+    <div class="mark">Read<span>back</span></div>
+    <div class="beta">Free while in beta</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow reveal d1">For people who'd rather read</div>
+    <h1 class="reveal d2">Turn any podcast into a <em>document</em> you can skim in two minutes.</h1>
+    <p class="sub reveal d3">Paste an episode link, get back a clean, structured summary in your inbox. No three-hour listen. No app to install.</p>
+
+    <div class="form reveal d4">
+      <div class="field">
+        <label for="url">Podcast episode URL</label>
+        <input id="url" type="url" placeholder="https://… (Apple, Spotify, YouTube, or an MP3 link)" />
+      </div>
+      <div class="field">
+        <label for="email">Where should we send it?</label>
+        <input id="email" type="email" placeholder="you@email.com" />
+      </div>
+      <button class="submit" id="submitBtn">Send me the summary</button>
+      <div class="formnote"><b>3 free summaries</b> · no account needed</div>
+      <div class="msg" id="msg"></div>
+    </div>
+  </section>
+
+  <section class="steps">
+    <div class="step"><div class="n">01</div><h3>Drop a link</h3><p>Any episode URL or a direct audio file. We pull the audio automatically.</p></div>
+    <div class="step"><div class="n">02</div><h3>We transcribe & distill</h3><p>The full episode is transcribed and condensed into key points, themes, and takeaways.</p></div>
+    <div class="step"><div class="n">03</div><h3>Read it in your inbox</h3><p>A formatted summary lands in your email, usually within a few minutes.</p></div>
+  </section>
+
+  <section class="pricing">
+    <h2>Simple while we're small.</h2>
+    <p class="lede">Start free. Pro is coming for people who live in their podcast feed.</p>
+    <div class="plans">
+      <div class="plan free">
+        <div class="tag">Free</div>
+        <div class="price">$0</div>
+        <ul>
+          <li>3 episode summaries</li>
+          <li>Delivered to your inbox</li>
+          <li>No account, no card</li>
+        </ul>
+        <button class="cta" onclick="document.getElementById('url').focus()">Start free</button>
+      </div>
+      <div class="plan pro">
+        <div class="tag">Pro · early access</div>
+        <div class="price">$9<small> / mo</small></div>
+        <ul>
+          <li>Unlimited summaries</li>
+          <li>Downloadable Word &amp; PDF docs</li>
+          <li>Long episodes &amp; batch processing</li>
+        </ul>
+        <button class="cta" id="proBtn">Get early access</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="reveal d1">Readback · made for the chronically time-poor · <a href="#" id="reset" style="color:var(--ink-faint)">reset demo</a></footer>
+
+</div>
+
+<script>
+  /* ─────────────────────────────────────────────────────────────
+     CONFIG — edit these two lines, then deploy.
+     ───────────────────────────────────────────────────────────── */
+  const BACKEND_URL = "https://api.yourdomain.com";  // ← your FastAPI server (EC2). e.g. https://api.readback.co
+  const DEMO_MODE   = true;   // ← true = page works live with no backend (fakes success). Flip to false once main.py is deployed.
+
+  const $ = id => document.getElementById(id);
+  const msg = $("msg");
+  function showMsg(text, kind){ msg.textContent = text; msg.className = "msg " + kind; }
+
+  /* ── Free tier: submit an episode ── */
+  $("submitBtn").addEventListener("click", async () => {
+    const url = $("url").value.trim();
+    const email = $("email").value.trim();
+    if(!url || !/^https?:\/\//.test(url)){ showMsg("Paste a valid episode link (starting with http).", "err"); return; }
+    if(!email || !/.+@.+\..+/.test(email)){ showMsg("Add a valid email so we can send it to you.", "err"); return; }
+
+    const btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Sending…";
+
+    if(DEMO_MODE){
+      const used = (+localStorage.getItem("rb_used_"+email) || 0);
+      if(used >= 3){ showMsg("You've used all 3 free summaries. Pro is coming — grab early access below.", "err"); btn.disabled=false; btn.textContent="Send me the summary"; document.getElementById("proBtn").focus(); return; }
+      localStorage.setItem("rb_used_"+email, used+1);
+      setTimeout(()=>{ showMsg("On its way — check your inbox in a few minutes. ("+(2-used)+" free left)", "ok"); btn.disabled=false; btn.textContent="Send me the summary"; }, 700);
+      return;
+    }
+
+    try{
+      const r = await fetch(BACKEND_URL + "/submit", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ url, email })
+      });
+      const data = await r.json().catch(()=>({}));
+      if(r.status === 429){
+        showMsg("You've used all 3 free summaries. Pro is coming — grab early access below.", "err");
+        $("proBtn").focus();
+      } else if(!r.ok){
+        showMsg(data.detail || "Something went wrong — try again in a moment.", "err");
+      } else {
+        const left = (data.remaining ?? "");
+        showMsg("On its way — check your inbox in a few minutes." + (left!=="" ? " ("+left+" free left)" : ""), "ok");
+      }
+    } catch(e){
+      showMsg("Couldn't reach the server. Try again shortly.", "err");
+    } finally {
+      btn.disabled = false; btn.textContent = "Send me the summary";
+    }
+  });
+
+  /* ── $9 Pro: the willingness-to-pay probe. Records intent, no charge yet. ── */
+  $("proBtn").addEventListener("click", async () => {
+    let email = $("email").value.trim();
+    if(!email || !/.+@.+\..+/.test(email)){
+      email = prompt("Enter your email for Pro early access:") || "";
+      if(!/.+@.+\..+/.test(email)) return;
+    }
+    const btn = $("proBtn"); btn.disabled = true; btn.textContent = "Adding you…";
+
+    const done = () => { showMsg("You're on the early-access list for Pro. We'll email you when it opens.", "ok"); btn.textContent = "You're on the list ✓"; };
+
+    if(DEMO_MODE){ setTimeout(done, 500); return; }
+    try{
+      await fetch(BACKEND_URL + "/interest", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ email, plan:"pro_9" })
+      });
+      done();
+    } catch(e){ btn.disabled=false; btn.textContent="Get early access"; showMsg("Couldn't reach the server — try again shortly.","err"); }
+  });
+
+  $("reset").addEventListener("click", (e)=>{ e.preventDefault(); Object.keys(localStorage).filter(k=>k.startsWith("rb_used_")).forEach(k=>localStorage.removeItem(k)); showMsg("Demo counter reset.","ok"); });
+</script>
+</body>
+</html>
