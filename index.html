@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Readback — podcasts, as documents you can actually read</title>
+<title>Earnote — podcasts, as documents you can actually read</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -108,7 +108,7 @@
 <div class="wrap">
 
   <header class="reveal d1">
-    <div class="mark">Read<span>back</span></div>
+    <div class="mark">Ear<span>note</span></div>
     <div class="beta">Free while in beta</div>
   </header>
 
@@ -165,7 +165,7 @@
     </div>
   </section>
 
-  <footer class="reveal d1">Readback · made for the chronically time-poor · <a href="#" id="reset" style="color:var(--ink-faint)">reset demo</a></footer>
+  <footer class="reveal d1">Earnote · made for the chronically time-poor · <a href="#" id="reset" style="color:var(--ink-faint)">reset demo</a></footer>
 
 </div>
 
@@ -173,7 +173,7 @@
   /* ─────────────────────────────────────────────────────────────
      CONFIG — edit these two lines, then deploy.
      ───────────────────────────────────────────────────────────── */
-  const BACKEND_URL = "https://api.yourdomain.com";  // ← your FastAPI server (EC2). e.g. https://api.readback.co
+  const BACKEND_URL = "https://api.earnote.app";  // ← your FastAPI server (EC2)
   const DEMO_MODE   = true;   // ← true = page works live with no backend (fakes success). Flip to false once main.py is deployed.
 
   const $ = id => document.getElementById(id);
@@ -190,9 +190,9 @@
     const btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Sending…";
 
     if(DEMO_MODE){
-      const used = (+localStorage.getItem("rb_used_"+email) || 0);
+      const used = (+localStorage.getItem("en_used_"+email) || 0);
       if(used >= 3){ showMsg("You've used all 3 free summaries. Pro is coming — grab early access below.", "err"); btn.disabled=false; btn.textContent="Send me the summary"; document.getElementById("proBtn").focus(); return; }
-      localStorage.setItem("rb_used_"+email, used+1);
+      localStorage.setItem("en_used_"+email, used+1);
       setTimeout(()=>{ showMsg("On its way — check your inbox in a few minutes. ("+(2-used)+" free left)", "ok"); btn.disabled=false; btn.textContent="Send me the summary"; }, 700);
       return;
     }
@@ -240,7 +240,7 @@
     } catch(e){ btn.disabled=false; btn.textContent="Get early access"; showMsg("Couldn't reach the server — try again shortly.","err"); }
   });
 
-  $("reset").addEventListener("click", (e)=>{ e.preventDefault(); Object.keys(localStorage).filter(k=>k.startsWith("rb_used_")).forEach(k=>localStorage.removeItem(k)); showMsg("Demo counter reset.","ok"); });
+  $("reset").addEventListener("click", (e)=>{ e.preventDefault(); Object.keys(localStorage).filter(k=>k.startsWith("en_used_")).forEach(k=>localStorage.removeItem(k)); showMsg("Demo counter reset.","ok"); });
 </script>
 </body>
 </html>

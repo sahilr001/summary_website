@@ -37,9 +37,7 @@ cd /opt/readback
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
-pip install "fastapi" "uvicorn[standard]" "pydantic[email]"
-# pydantic[email] is required — EmailStr needs the email-validator package
-# add whatever your pipeline needs too: assemblyai, anthropic, sendgrid, etc.
+pip install fastapi "uvicorn[standard]" "pydantic[email]" assemblyai anthropic sendgrid yt-dlp
 ```
 
 The SQLite file `readback.db` will be created in `/opt/readback` on first run. That directory is your persistence — back it up if the Pro-intent and usage data matter to you.
@@ -54,6 +52,8 @@ sudo tee /opt/readback/readback.env >/dev/null <<'EOF'
 ASSEMBLYAI_API_KEY=your_key
 ANTHROPIC_API_KEY=your_key
 SENDGRID_API_KEY=your_key
+FROM_EMAIL=hello@yourdomain.com
+CLAUDE_MODEL=claude-sonnet-4-6
 EOF
 sudo chmod 600 /opt/readback/readback.env
 ```
