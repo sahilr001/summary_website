@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Earnote — Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#fff;color:#1a1a1a;padding:48px;font-size:13px;line-height:1.5}
+  h1{font-size:22px;font-weight:700;margin-bottom:4px;color:#1a1a1a}
+  .subtitle{color:#666;font-size:13px;margin-bottom:36px}
+  h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#666;margin-bottom:14px;margin-top:36px}
+
+  /* ── request flow ── */
+  .flow{display:flex;flex-direction:column;gap:0;align-items:flex-start}
+  .flow-row{display:flex;align-items:stretch;gap:0}
+  .box{border:1.5px solid #d0d0d0;border-radius:8px;padding:10px 14px;background:#fafafa;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:11.5px}
+  .box.blue{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
+  .box.green{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+  .box.amber{background:#fffbeb;border-color:#fde68a;color:#92400e}
+  .box.purple{background:#faf5ff;border-color:#e9d5ff;color:#6b21a8}
+  .box.red{background:#fff1f2;border-color:#fecdd3;color:#9f1239}
+  .box.gray{background:#f8f8f8;border-color:#e0e0e0;color:#333}
+  .arrow{display:flex;align-items:center;padding:0 6px;color:#999;font-size:16px;font-weight:300}
+  .arrow.down{padding:2px 0;justify-content:center;color:#bbb;font-size:13px;margin-left:20px}
+  .label{font-size:10px;color:#999;font-family:'Inter',sans-serif;margin-top:2px}
+
+  /* ── ec2 box ── */
+  .ec2{border:2px solid #3b82f6;border-radius:12px;padding:20px 24px;background:#f8fbff;margin-top:4px}
+  .ec2-title{font-size:10px;font-weight:600;color:#3b82f6;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px}
+  .ec2-row{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .ec2-col{display:flex;flex-direction:column;gap:8px}
+  .small-arrow{color:#bbb;font-size:11px;padding:0 4px}
+
+  /* ── filesystem ── */
+  .fs-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .fs-box{border:1.5px solid #e5e7eb;border-radius:8px;overflow:hidden}
+  .fs-header{background:#f3f4f6;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:#374151;border-bottom:1px solid #e5e7eb}
+  .fs-body{padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+  .fs-item{display:flex;align-items:baseline;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10.5px}
+  .fs-name{color:#111}
+  .fs-desc{color:#888;font-size:10px;font-family:'Inter',sans-serif}
+  .fs-icon{color:#aaa;flex-shrink:0}
+
+  /* ── database ── */
+  .db-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .db-table{border:1.5px solid #e5e7eb;border-radius:8px;overflow:hidden}
+  .db-header{padding:9px 14px;font-weight:600;font-size:12px;font-family:'JetBrains Mono',monospace}
+  .db-header.jobs{background:#eff6ff;color:#1e40af;border-bottom:1px solid #bfdbfe}
+  .db-header.interest{background:#faf5ff;color:#6b21a8;border-bottom:1px solid #e9d5ff}
+  .db-row{display:flex;align-items:center;gap:8px;padding:5px 14px;border-bottom:1px solid #f3f4f6;font-family:'JetBrains Mono',monospace;font-size:10.5px}
+  .db-row:last-child{border-bottom:none}
+  .db-col{color:#111;min-width:80px}
+  .db-type{color:#888;font-size:10px;min-width:70px}
+  .db-note{color:#aaa;font-size:10px;font-style:italic}
+  .db-footer{background:#fafafa;padding:7px 14px;font-size:10px;color:#888;border-top:1px solid #f0f0f0;font-family:'Inter',sans-serif}
+
+  /* ── pipeline ── */
+  .pipeline{display:flex;align-items:center;gap:0;flex-wrap:nowrap;margin-top:6px}
+  .step{border:1.5px solid #d0d0d0;border-radius:6px;padding:8px 11px;font-size:10.5px;font-family:'JetBrains Mono',monospace;background:#fafafa;text-align:center;min-width:100px}
+  .step .step-num{font-size:9px;color:#bbb;display:block;margin-bottom:2px}
+  .step-arrow{color:#bbb;font-size:14px;padding:0 5px}
+  .step.dl{background:#fffbeb;border-color:#fde68a;color:#92400e}
+  .step.ai{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
+  .step.llm{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+  .step.mail{background:#fdf4ff;border-color:#e9d5ff;color:#7e22ce}
+  .step.db2{background:#f8f8f8;border-color:#ddd;color:#555}
+
+  .badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:20px;font-weight:600;vertical-align:middle;margin-left:4px}
+  .badge.ext{background:#fef3c7;color:#b45309;border:1px solid #fde68a}
+  .badge.local{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+
+  .divider{border:none;border-top:1px solid #f0f0f0;margin:32px 0}
+
+  .note{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:10px 14px;font-size:11px;color:#78350f;margin-top:24px}
+  .note strong{font-weight:600}
+</style>
+</head>
+<body>
+
+<h1>Earnote — System Architecture</h1>
+<p class="subtitle">Single EC2 box · Ubuntu · earnote.app · June 2026</p>
+
+<!-- ═══ REQUEST FLOW ══════════════════════════════════════════════════════ -->
+<h2>Request Flow</h2>
+
+<div class="flow">
+
+  <!-- top row: browser → cloudflare → ec2 -->
+  <div class="flow-row" style="align-items:center;gap:0">
+    <div class="box blue">Browser</div>
+    <div class="arrow">→</div>
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <div style="font-size:10px;color:#888;font-family:'Inter',sans-serif;text-align:center;margin-bottom:2px">Cloudflare DNS<br><span style="color:#bbb">earnote.app + api.earnote.app</span><br><span style="color:#bbb">→ 13.207.58.206</span></div>
+    </div>
+    <div class="arrow">→</div>
+
+    <!-- EC2 wrapper -->
+    <div class="ec2" style="flex:1">
+      <div class="ec2-title">EC2 Instance · 13.207.58.206</div>
+
+      <!-- nginx row -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div class="box gray" style="font-weight:500">nginx  <span style="color:#bbb;font-weight:400">:80 / :443</span></div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="small-arrow">→</div>
+            <div class="box green" style="font-size:10.5px">earnote.app &amp; www  →  /var/www/earnote/index.html</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="small-arrow">→</div>
+            <div class="box amber" style="font-size:10.5px">api.earnote.app  →  proxy_pass 127.0.0.1:8000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- uvicorn / fastapi -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <div style="width:155px"></div>
+        <div class="box purple" style="font-size:10.5px">uvicorn  <span style="color:#bbb">127.0.0.1:8000</span>  ·  FastAPI  (main.py)</div>
+      </div>
+
+      <!-- endpoints -->
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-left:163px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div class="box blue" style="font-size:10px;padding:6px 10px">POST /submit</div>
+          <div style="font-size:9px;color:#888">returns 200 immediately<br>queues BackgroundTask</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div class="box purple" style="font-size:10px;padding:6px 10px">POST /interest</div>
+          <div style="font-size:9px;color:#888">logs Pro click</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div class="box green" style="font-size:10px;padding:6px 10px">GET /stats</div>
+          <div style="font-size:9px;color:#888">owner dashboard</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ BACKGROUND PIPELINE ══════════════════════════════════════════════ -->
+<h2 style="margin-top:28px">Background Pipeline  <span style="font-size:11px;font-weight:400;color:#999;text-transform:none;letter-spacing:0">(triggered by POST /submit, runs after HTTP response)</span></h2>
+
+<div class="pipeline">
+  <div class="step dl">
+    <span class="step-num">1</span>
+    yt-dlp<br>
+    <span style="font-size:9px;color:#b45309">download audio</span>
+  </div>
+  <div class="step-arrow">→</div>
+  <div class="step ai">
+    <span class="step-num">2</span>
+    AssemblyAI<br>
+    <span style="font-size:9px;color:#3b82f6">transcribe</span>
+  </div>
+  <div class="step-arrow">→</div>
+  <div class="step llm">
+    <span class="step-num">3</span>
+    Claude API<br>
+    <span style="font-size:9px;color:#16a34a">summarize</span>
+  </div>
+  <div class="step-arrow">→</div>
+  <div class="step mail">
+    <span class="step-num">4</span>
+    SendGrid<br>
+    <span style="font-size:9px;color:#7e22ce">email user</span>
+  </div>
+  <div class="step-arrow">→</div>
+  <div class="step db2">
+    <span class="step-num">5</span>
+    SQLite<br>
+    <span style="font-size:9px;color:#555">status = done</span>
+  </div>
+</div>
+<div style="margin-top:6px;font-size:10px;color:#aaa">Steps 2, 3, 4 are external API calls.&nbsp; yt-dlp uses <code style="font-size:10px">youtube-cookies.txt</code> to bypass YouTube bot-checks on EC2 IPs.</div>
+
+<hr class="divider">
+
+<!-- ═══ FILESYSTEM ════════════════════════════════════════════════════════ -->
+<h2>EC2 Filesystem</h2>
+
+<div class="fs-grid">
+
+  <div class="fs-box">
+    <div class="fs-header">/opt/earnote/</div>
+    <div class="fs-body">
+      <div class="fs-item"><span class="fs-icon">├─</span><span class="fs-name">main.py</span><span class="fs-desc">FastAPI app + pipeline functions</span></div>
+      <div class="fs-item"><span class="fs-icon">├─</span><span class="fs-name">readback.db</span><span class="fs-desc">SQLite — jobs &amp; interest tables</span></div>
+      <div class="fs-item"><span class="fs-icon">├─</span><span class="fs-name">earnote.env</span><span class="fs-desc">API keys · chmod 600 · not in git</span></div>
+      <div class="fs-item"><span class="fs-icon">├─</span><span class="fs-name">youtube-cookies.txt</span><span class="fs-desc">Edge cookies · chmod 600</span></div>
+      <div class="fs-item"><span class="fs-icon">└─</span><span class="fs-name">venv/</span><span class="fs-desc">Python virtualenv + all pip packages</span></div>
+    </div>
+  </div>
+
+  <div class="fs-box">
+    <div class="fs-header">/var/www/earnote/</div>
+    <div class="fs-body">
+      <div class="fs-item"><span class="fs-icon">└─</span><span class="fs-name">index.html</span><span class="fs-desc">entire frontend — one static file</span></div>
+    </div>
+    <div class="fs-header" style="margin-top:8px">/etc/nginx/sites-enabled/</div>
+    <div class="fs-body">
+      <div class="fs-item"><span class="fs-icon">├─</span><span class="fs-name">earnote-frontend</span><span class="fs-desc">serves earnote.app + www</span></div>
+      <div class="fs-item"><span class="fs-icon">└─</span><span class="fs-name">earnote-api</span><span class="fs-desc">proxies api.earnote.app → :8000</span></div>
+    </div>
+    <div class="fs-header" style="margin-top:8px">/etc/systemd/system/</div>
+    <div class="fs-body">
+      <div class="fs-item"><span class="fs-icon">└─</span><span class="fs-name">earnote.service</span><span class="fs-desc">keeps uvicorn alive, restarts on crash</span></div>
+    </div>
+    <div class="fs-header" style="margin-top:8px">/etc/letsencrypt/live/earnote.app/</div>
+    <div class="fs-body">
+      <div class="fs-item"><span class="fs-icon">└─</span><span class="fs-name">fullchain.pem + privkey.pem</span><span class="fs-desc">TLS cert · covers 3 names · auto-renews</span></div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<!-- ═══ DATABASE ══════════════════════════════════════════════════════════ -->
+<h2>Database  <span style="font-size:11px;font-weight:400;color:#999;text-transform:none;letter-spacing:0">/opt/earnote/readback.db  (SQLite — single file, no separate server)</span></h2>
+
+<div class="db-grid">
+
+  <div class="db-table">
+    <div class="db-header jobs">jobs</div>
+    <div class="db-row"><span class="db-col">id</span><span class="db-type">INTEGER PK</span><span class="db-note">autoincrement</span></div>
+    <div class="db-row"><span class="db-col">email</span><span class="db-type">TEXT</span><span class="db-note">lowercased on insert</span></div>
+    <div class="db-row"><span class="db-col">url</span><span class="db-type">TEXT</span><span class="db-note">YouTube or audio URL</span></div>
+    <div class="db-row"><span class="db-col">status</span><span class="db-type">TEXT</span><span class="db-note">queued → done / error: msg</span></div>
+    <div class="db-row"><span class="db-col">created</span><span class="db-type">TEXT</span><span class="db-note">UTC ISO timestamp</span></div>
+    <div class="db-footer">Free-tier cap: COUNT(*) WHERE email=? ≥ 3 → 429<br>Powers: summaries_run, emails_at_cap in /stats</div>
+  </div>
+
+  <div class="db-table">
+    <div class="db-header interest">interest</div>
+    <div class="db-row"><span class="db-col">id</span><span class="db-type">INTEGER PK</span><span class="db-note">autoincrement</span></div>
+    <div class="db-row"><span class="db-col">email</span><span class="db-type">TEXT</span><span class="db-note">who clicked the $9 button</span></div>
+    <div class="db-row"><span class="db-col">plan</span><span class="db-type">TEXT</span><span class="db-note">"pro_9" (no charge taken)</span></div>
+    <div class="db-row"><span class="db-col">created</span><span class="db-type">TEXT</span><span class="db-note">UTC ISO timestamp</span></div>
+    <div class="db-footer">Powers: pro_clicks in /stats — your conversion signal</div>
+  </div>
+
+</div>
+
+<div class="note" style="margin-top:20px">
+  <strong>Important:</strong> The database is a single file on the EC2 instance. If the instance is terminated without a backup, all data is lost. To back up: <code style="font-size:11px">scp -i summary-website.pem ubuntu@13.207.58.206:/opt/earnote/readback.db ./readback.db</code>
+</div>
+
+</body>
+</html>
