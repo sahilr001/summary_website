@@ -1,5 +1,5 @@
 """
-Earnote API — free tier + Pro intent capture, wired to your real pipeline.
+Readback API — free tier + Pro intent capture, wired to your real pipeline.
 
 The transcribe / summarize / send_email functions below are adapted from your
 Stockbee pipeline.py:
@@ -32,21 +32,22 @@ import tempfile
 from datetime import datetime, timezone
 from contextlib import closing
 
-from fastapi import FastAPI, BackgroundTasks, HTTPException
+from fastapi import FastAPI, BackgroundTasks, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 
 # ── config ────────────────────────────────────────────────────────────────
-FREE_LIMIT = 3
+FREE_LIMIT = 3            # free summaries per email (lifetime)
+IP_DAILY_LIMIT = 10       # max summaries per IP per day — blunt abuse/cost guard for launch spikes
 DB = "readback.db"
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-6")
 ALLOWED_ORIGINS = [
-    "https://earnote.app",
-    "https://www.earnote.app",
+    "https://yourdomain.com",
+    "https://www.yourdomain.com",
     "http://localhost:8000",
 ]
 
-app = FastAPI(title="Earnote API")
+app = FastAPI(title="Readback API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
@@ -66,7 +67,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS jobs(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT NOT NULL, url TEXT NOT NULL,
-            status TEXT DEFAULT 'queued', created TEXT NOT NULL
+            ip TEXT, status TEXT DEFAULT 'queued', created TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS interest(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,12 +78,30 @@ def init_db():
 
 init_db()
 
+def _ensure_ip_column():
+    """Safe migration: add jobs.ip if an older DB predates it."""
+    with closing(db()) as con:
+        cols = [r["name"] for r in con.execute("PRAGMA table_info(jobs)").fetchall()]
+        if "ip" not in cols:
+            con.execute("ALTER TABLE jobs ADD COLUMN ip TEXT")
+            con.commit()
+
+_ensure_ip_column()
+
 def now():
     return datetime.now(timezone.utc).isoformat()
 
 def used_count(email: str) -> int:
     with closing(db()) as con:
         return con.execute("SELECT COUNT(*) c FROM jobs WHERE email=?", (email.lower(),)).fetchone()["c"]
+
+def ip_count_today(ip: str) -> int:
+    """How many summaries this IP has triggered since UTC midnight."""
+    start = datetime.now(timezone.utc).strftime("%Y-%m-%dT00:00:00")
+    with closing(db()) as con:
+        return con.execute(
+            "SELECT COUNT(*) c FROM jobs WHERE ip=? AND created>=?", (ip, start)
+        ).fetchone()["c"]
 
 # ── request models ──────────────────────────────────────────────────────────
 class SubmitIn(BaseModel):
@@ -95,16 +114,26 @@ class InterestIn(BaseModel):
 
 # ── endpoints ────────────────────────────────────────────────────────────────
 @app.post("/submit")
-def submit(body: SubmitIn, bg: BackgroundTasks):
+def submit(body: SubmitIn, request: Request, bg: BackgroundTasks):
     email = body.email.lower()
+
+    # client IP — behind nginx, the real IP is first in X-Forwarded-For
+    fwd = request.headers.get("x-forwarded-for", "")
+    ip = fwd.split(",")[0].strip() if fwd else (request.client.host if request.client else "unknown")
+
+    # per-IP daily cap: blunt guard so a launch spike can't run up the API bill
+    if ip_count_today(ip) >= IP_DAILY_LIMIT:
+        raise HTTPException(status_code=429, detail="Daily limit reached for this network. Try again tomorrow.")
+
+    # per-email free cap
     used = used_count(email)
     if used >= FREE_LIMIT:
         raise HTTPException(status_code=429, detail="Free limit reached")
 
     with closing(db()) as con:
         cur = con.execute(
-            "INSERT INTO jobs(email, url, status, created) VALUES(?,?,?,?)",
-            (email, body.url, "queued", now()),
+            "INSERT INTO jobs(email, url, ip, status, created) VALUES(?,?,?,?,?)",
+            (email, body.url, ip, "queued", now()),
         )
         con.commit()
         job_id = cur.lastrowid
@@ -155,8 +184,6 @@ def _set_status(job_id: int, status: str):
 # Spotify is DRM-locked and won't resolve.
 _AUDIO_EXT = (".mp3", ".m4a", ".wav", ".aac", ".ogg", ".flac", ".mp4")
 
-_COOKIES_FILE = "/opt/earnote/youtube-cookies.txt"
-
 def _download_audio(url: str) -> str:
     import yt_dlp
     tmpdir = tempfile.mkdtemp(prefix="rb_")
@@ -166,11 +193,6 @@ def _download_audio(url: str) -> str:
         "quiet": True,
         "noplaylist": True,
     }
-    # Download yt-dlp's JS challenge-solver script (needed to decode YouTube n-param)
-    opts["extractor_args"] = {"youtube": {"player_client": ["web"]}}
-    opts["remote_components"] = ["ejs:github"]
-    if os.path.exists(_COOKIES_FILE):
-        opts["cookiefile"] = _COOKIES_FILE
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=True)
         return ydl.prepare_filename(info)
@@ -264,9 +286,16 @@ def send_email(to_email: str, summary: str) -> None:
                     Earnote summary
                 </h1>
                 {html_summary}
-                <hr style="margin-top: 30px;">
-                <p style="color: #95a5a6; font-size: 12px;">
-                    Generated by Earnote | {datetime.now().strftime('%Y-%m-%d %H:%M')}
+                <hr style="margin-top: 30px; border: none; border-top: 1px solid #eee;">
+                <p style="color: #6b6256; font-size: 13px; margin: 14px 0 4px;">
+                    Made with <strong style="color:#be451e;">Earnote</strong> — paste a podcast link, get the summary.
+                    <a href="https://earnote.app" style="color:#be451e;">earnote.app</a>
+                </p>
+                <p style="color: #9a9081; font-size: 13px; margin: 0 0 10px;">
+                    Know someone who saves episodes they never finish? Forward this to them.
+                </p>
+                <p style="color: #b8afa0; font-size: 11px; margin: 0;">
+                    Generated {datetime.now().strftime('%Y-%m-%d %H:%M')}
                 </p>
             </div>
         """),
