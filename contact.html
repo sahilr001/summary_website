@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Earnote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFEF9; --ink:#0D0D0B; --ink-soft:#5A5750; --ink-faint:#A09890;
+    --accent:#FF3B00; --accent-dark:#CC2F00;
+    --block:#0D0D0B; --block-text:#FFFEF9;
+    --line:rgba(13,13,11,0.12);
+    --r:4px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased}
+  body{background:var(--bg);color:var(--ink);font-family:"DM Sans",sans-serif;font-size:16px;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;border:none}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+
+  header{border-bottom:2px solid var(--ink);padding:18px 0}
+  .hinner{display:flex;justify-content:space-between;align-items:center}
+  .logo{font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:.04em}
+  .logo span{color:var(--accent)}
+  .nav-link{font-size:14px;font-weight:500;color:var(--ink-soft);transition:color .15s}
+  .nav-link:hover{color:var(--accent)}
+
+  .page{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 65px - 60px)}
+
+  .left{padding:64px 56px 64px 0;border-right:2px solid var(--ink)}
+  .kicker{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:20px}
+  h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(56px,8vw,96px);line-height:.93;
+    letter-spacing:.01em;margin-bottom:28px}
+  .desc{font-size:16px;color:var(--ink-soft);line-height:1.65;margin-bottom:40px}
+  .also{border-top:1px solid var(--line);padding-top:28px}
+  .also-label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:12px}
+  .also p{font-size:14px;color:var(--ink-soft)}
+
+  .right{padding:64px 0 64px 56px}
+  .field{margin-bottom:20px}
+  .field label{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:8px}
+  .field input,.field textarea{width:100%;font:inherit;font-size:15px;color:var(--ink);
+    background:var(--bg);border:2px solid var(--line);border-radius:var(--r);
+    padding:13px 14px;transition:border-color .15s;resize:vertical}
+  .field textarea{min-height:140px;line-height:1.55}
+  .field input::placeholder,.field textarea::placeholder{color:var(--ink-faint)}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
+  .submit{background:var(--accent);color:#fff;font-weight:600;font-size:15px;letter-spacing:.02em;
+    padding:14px 32px;border-radius:var(--r);transition:background .12s,transform .08s}
+  .submit:hover{background:var(--accent-dark)}
+  .submit:active{transform:scale(.98)}
+  .submit:disabled{opacity:.45;cursor:default}
+  .msg{margin-top:16px;font-size:14px;padding:12px 14px;border-radius:var(--r);display:none}
+  .msg.ok{display:block;background:#eaf3e6;color:#2f5a22;border:1px solid #cadfbe}
+  .msg.err{display:block;background:#fbeae4;color:#943219;border:1px solid #f0cdbe}
+
+  footer{border-top:2px solid var(--ink);padding:18px 0}
+  footer p{font-size:13px;color:var(--ink-faint);font-family:"DM Mono",monospace}
+
+  @media(max-width:700px){
+    .page{grid-template-columns:1fr}
+    .left{border-right:none;border-bottom:2px solid var(--ink);padding:40px 0}
+    .right{padding:40px 0}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hinner">
+    <a href="/" class="logo">Ear<span>note</span></a>
+    <a href="/" class="nav-link">← Back to home</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="page">
+
+    <div class="left">
+      <div class="kicker">Get in touch</div>
+      <h1>SAY HELLO.</h1>
+      <p class="desc">Got a question, a bug to report, or just want to share feedback? We read every message and usually reply within a day.</p>
+      <div class="also">
+        <div class="also-label">What to expect</div>
+        <p>We'll reply from <strong>hello@earnote.app</strong> — check your spam folder if you don't hear back within 24 hours.</p>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="field">
+        <label for="name">Your name</label>
+        <input id="name" type="text" placeholder="Jane Smith" />
+      </div>
+      <div class="field">
+        <label for="email">Your email</label>
+        <input id="email" type="email" placeholder="jane@email.com" />
+      </div>
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="What's on your mind?"></textarea>
+      </div>
+      <button class="submit" id="sendBtn">Send message →</button>
+      <div class="msg" id="msg"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Earnote &nbsp;·&nbsp; <a href="/" style="color:var(--ink-faint)">earnote.app</a></p>
+  </div>
+</footer>
+
+<script>
+  const BACKEND_URL = "https://api.earnote.app";
+
+  const $ = id => document.getElementById(id);
+  const msg = $("msg");
+  function showMsg(text, kind){ msg.textContent = text; msg.className = "msg " + kind; }
+
+  $("sendBtn").addEventListener("click", async () => {
+    const name    = $("name").value.trim();
+    const email   = $("email").value.trim();
+    const message = $("message").value.trim();
+
+    if(!name)                          { showMsg("Please enter your name.", "err"); return; }
+    if(!/.+@.+\..+/.test(email))       { showMsg("Please enter a valid email.", "err"); return; }
+    if(message.length < 10)            { showMsg("Message is too short.", "err"); return; }
+
+    const btn = $("sendBtn"); btn.disabled = true; btn.textContent = "Sending…";
+
+    try{
+      const r = await fetch(BACKEND_URL + "/contact", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ name, email, message })
+      });
+      if(r.ok){
+        showMsg("Message sent — we'll get back to you soon.", "ok");
+        $("name").value = ""; $("email").value = ""; $("message").value = "";
+        btn.textContent = "Sent ✓";
+      } else {
+        showMsg("Something went wrong — please try again.", "err");
+        btn.disabled = false; btn.textContent = "Send message →";
+      }
+    } catch(e){
+      showMsg("Couldn't reach the server. Try again shortly.", "err");
+      btn.disabled = false; btn.textContent = "Send message →";
+    }
+  });
+</script>
+</body>
+</html>

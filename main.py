@@ -112,6 +112,11 @@ class InterestIn(BaseModel):
     email: EmailStr
     plan: str = "pro_9"
 
+class ContactIn(BaseModel):
+    name: str
+    email: EmailStr
+    message: str
+
 # ── endpoints ────────────────────────────────────────────────────────────────
 @app.post("/submit")
 def submit(body: SubmitIn, request: Request, bg: BackgroundTasks):
@@ -147,6 +152,31 @@ def interest(body: InterestIn):
         con.execute("INSERT INTO interest(email, plan, created) VALUES(?,?,?)",
                     (body.email.lower(), body.plan, now()))
         con.commit()
+    return {"ok": True}
+
+@app.post("/contact")
+def contact(body: ContactIn):
+    from sendgrid import SendGridAPIClient
+    from sendgrid.helpers.mail import Mail, Content
+    owner = os.environ.get("OWNER_EMAIL")
+    if not owner:
+        raise HTTPException(status_code=500, detail="Contact not configured")
+    message = Mail(
+        from_email=os.environ["FROM_EMAIL"],
+        to_emails=owner,
+        subject=f"Earnote contact: {body.name}",
+        html_content=Content("text/html", f"""
+            <div style="font-family:Arial,sans-serif;max-width:600px;padding:20px">
+                <h2 style="color:#FF3B00">New message via Earnote</h2>
+                <p><b>Name:</b> {body.name}</p>
+                <p><b>Email:</b> {body.email}</p>
+                <p><b>Message:</b></p>
+                <p style="background:#f5f5f5;padding:14px;border-radius:6px">{body.message}</p>
+            </div>
+        """),
+    )
+    sg = SendGridAPIClient(os.environ["SENDGRID_API_KEY"])
+    sg.send(message)
     return {"ok": True}
 
 @app.get("/stats")
