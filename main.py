@@ -155,6 +155,8 @@ def _set_status(job_id: int, status: str):
 # Spotify is DRM-locked and won't resolve.
 _AUDIO_EXT = (".mp3", ".m4a", ".wav", ".aac", ".ogg", ".flac", ".mp4")
 
+_COOKIES_FILE = "/opt/earnote/youtube-cookies.txt"
+
 def _download_audio(url: str) -> str:
     import yt_dlp
     tmpdir = tempfile.mkdtemp(prefix="rb_")
@@ -164,6 +166,11 @@ def _download_audio(url: str) -> str:
         "quiet": True,
         "noplaylist": True,
     }
+    # Download yt-dlp's JS challenge-solver script (needed to decode YouTube n-param)
+    opts["extractor_args"] = {"youtube": {"player_client": ["web"]}}
+    opts["remote_components"] = ["ejs:github"]
+    if os.path.exists(_COOKIES_FILE):
+        opts["cookiefile"] = _COOKIES_FILE
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=True)
         return ydl.prepare_filename(info)
