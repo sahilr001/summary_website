@@ -282,10 +282,13 @@ def send_email(to_email: str, summary: str) -> None:
     html_summary = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", html_summary)
     html_summary = re.sub(r"^- (.+)", r"<li>\1</li>", html_summary, flags=re.MULTILINE)
 
+    title_match = re.search(r'^## (.+)', summary, re.MULTILINE)
+    subject = f"Earnote: {title_match.group(1).strip()}" if title_match else "Your podcast summary is ready"
+
     message = Mail(
         from_email=os.environ["FROM_EMAIL"],
-        to_emails=to_email,                       # was a fixed TO_EMAIL in your pipeline
-        subject="Your podcast summary is ready",
+        to_emails=to_email,
+        subject=subject,
         html_content=Content("text/html", f"""
             <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px;">
                 <h1 style="color: #be451e; border-bottom: 2px solid #be451e; padding-bottom: 10px;">
