@@ -42,8 +42,8 @@ IP_DAILY_LIMIT = 10       # max summaries per IP per day — blunt abuse/cost gu
 DB = "readback.db"
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-6")
 ALLOWED_ORIGINS = [
-    "https://yourdomain.com",
-    "https://www.yourdomain.com",
+    "https://earnote.app",
+    "https://www.earnote.app",
     "http://localhost:8000",
 ]
 
