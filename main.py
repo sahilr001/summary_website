@@ -300,45 +300,98 @@ def summarize(transcript: str) -> str:
     )
     return message.content[0].text
 
-# ── 3. delivery — your markdown->HTML conversion, sent to the USER ───────────
+# ── 3. delivery — card-section HTML email ────────────────────────────────────
+def _parse_summary(summary: str) -> dict:
+    """Split Claude's markdown into title, overview paragraph, and named sections."""
+    title_m = re.search(r'^## (.+)', summary, re.MULTILINE)
+    title = title_m.group(1).strip() if title_m else "Your podcast summary"
+
+    overview_m = re.search(r'^## .+\n+([\s\S]+?)(?=^###|\Z)', summary, re.MULTILINE)
+    overview = overview_m.group(1).strip() if overview_m else ""
+
+    sections = []
+    for m in re.finditer(r'^### (.+)\n([\s\S]*?)(?=^###|\Z)', summary, re.MULTILINE):
+        heading = m.group(1).strip()
+        raw = m.group(2).strip()
+        bullets = [re.sub(r'^\*\*(.+)\*\*$', r'\1', b.lstrip('-• ').strip())
+                   for b in raw.splitlines() if b.strip().startswith(('-', '•', '*'))]
+        sections.append({"heading": heading, "bullets": bullets, "text": raw if not bullets else ""})
+
+    return {"title": title, "overview": overview, "sections": sections}
+
+def _card(heading: str, bullets: list, text: str) -> str:
+    AC = "#FF3B00"
+    rows = "".join(
+        f'<tr><td style="padding:9px 0;border-bottom:1px solid #efefef;font-size:15px;'
+        f'color:#333;line-height:1.55;">'
+        f'<span style="color:{AC};font-weight:700;margin-right:10px;">→</span>{b}</td></tr>'
+        for b in bullets
+    ) if bullets else (
+        f'<tr><td style="padding:9px 0;font-size:15px;color:#444;line-height:1.65;">{text}</td></tr>'
+    )
+    return f"""
+      <div style="margin:0 0 16px;border-radius:6px;overflow:hidden;border:1px solid #e8e8e8;">
+        <div style="background:{AC};padding:9px 18px;">
+          <span style="font-size:11px;font-weight:700;letter-spacing:.1em;
+            text-transform:uppercase;color:#fff;">{heading}</span>
+        </div>
+        <div style="background:#fafafa;padding:6px 18px 4px;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">{rows}</table>
+        </div>
+      </div>"""
+
 def send_email(to_email: str, summary: str) -> None:
     from sendgrid import SendGridAPIClient
     from sendgrid.helpers.mail import Mail, Content
 
-    # your conversion, kept as-is
-    html_summary = summary.replace("\n", "<br>")
-    html_summary = re.sub(r"## (.+)", r"<h2>\1</h2>", html_summary)
-    html_summary = re.sub(r"### (.+)", r"<h3>\1</h3>", html_summary)
-    html_summary = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", html_summary)
-    html_summary = re.sub(r"^- (.+)", r"<li>\1</li>", html_summary, flags=re.MULTILINE)
-
+    parsed = _parse_summary(summary)
     title_match = re.search(r'^## (.+)', summary, re.MULTILINE)
     subject = f"Earnote: {title_match.group(1).strip()}" if title_match else "Your podcast summary is ready"
+
+    cards_html = "".join(_card(s["heading"], s["bullets"], s["text"]) for s in parsed["sections"])
+    AC = "#FF3B00"
+
+    html = f"""
+    <div style="background:#f0f0f0;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
+    <div style="max-width:600px;margin:0 auto;">
+
+      <div style="background:#0D0D0B;border-radius:8px 8px 0 0;padding:18px 28px;">
+        <span style="font-size:20px;font-weight:900;letter-spacing:.06em;color:#fff;">
+          EAR<span style="color:{AC};">NOTE</span>
+        </span>
+      </div>
+
+      <div style="background:#fff;padding:28px 28px 12px;border:1px solid #e8e8e8;border-top:none;">
+        <h1 style="font-size:22px;font-weight:700;color:#0D0D0B;line-height:1.3;margin:0 0 12px;">
+          {parsed["title"]}
+        </h1>
+        <p style="font-size:15px;color:#555;line-height:1.65;margin:0 0 20px;
+          padding-bottom:20px;border-bottom:3px solid {AC};">
+          {parsed["overview"]}
+        </p>
+        {cards_html}
+      </div>
+
+      <div style="background:#f9f9f9;border:1px solid #e8e8e8;border-top:none;
+        border-radius:0 0 8px 8px;padding:16px 28px;text-align:center;">
+        <p style="font-size:13px;color:#888;margin:0 0 4px;">
+          Made with <a href="https://earnote.app" style="color:{AC};text-decoration:none;
+          font-weight:600;">Earnote</a>
+          &nbsp;·&nbsp; Know someone who never finishes their queue? Forward this.
+        </p>
+        <p style="font-size:11px;color:#bbb;margin:6px 0 0;">
+          {datetime.now().strftime('%d %b %Y, %H:%M UTC')}
+        </p>
+      </div>
+
+    </div>
+    </div>"""
 
     message = Mail(
         from_email=os.environ["FROM_EMAIL"],
         to_emails=to_email,
         subject=subject,
-        html_content=Content("text/html", f"""
-            <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px;">
-                <h1 style="color: #be451e; border-bottom: 2px solid #be451e; padding-bottom: 10px;">
-                    Earnote summary
-                </h1>
-                {html_summary}
-                <hr style="margin-top: 30px; border: none; border-top: 1px solid #eee;">
-                <p style="color: #6b6256; font-size: 13px; margin: 14px 0 4px;">
-                    Made with <strong style="color:#be451e;">Earnote</strong> — paste a podcast link, get the summary.
-                    <a href="https://earnote.app" style="color:#be451e;">earnote.app</a>
-                </p>
-                <p style="color: #9a9081; font-size: 13px; margin: 0 0 10px;">
-                    Know someone who saves episodes they never finish? Forward this to them.
-                </p>
-                <p style="color: #b8afa0; font-size: 11px; margin: 0;">
-                    Generated {datetime.now().strftime('%Y-%m-%d %H:%M')}
-                </p>
-            </div>
-        """),
+        html_content=Content("text/html", html),
     )
-
     sg = SendGridAPIClient(os.environ["SENDGRID_API_KEY"])
     sg.send(message)
