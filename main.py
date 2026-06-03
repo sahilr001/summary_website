@@ -270,15 +270,26 @@ def transcribe(url: str) -> str:
 # ── 2. summarization — your Claude call, general podcast prompt ──────────────
 SUMMARY_SYSTEM_PROMPT = (
     "You summarize podcast episodes for someone who will NOT listen to the audio. "
-    "Be faithful and concrete. Write in markdown with this structure:\n"
+    "Your goal is to give them a complete picture — they should know exactly what was discussed, "
+    "what was argued, and what to take away.\n\n"
+    "Be faithful, specific, and concrete. Use the speaker's actual words, numbers, and examples "
+    "where possible. Write in markdown with this structure:\n\n"
     "## <a short descriptive title>\n"
-    "A 2-3 sentence overview.\n"
+    "A 4-6 sentence overview: the main topic, the guest's background (if any), "
+    "and the core argument or narrative arc of the episode.\n\n"
+    "### Main thesis\n"
+    "1-2 sentences stating the central claim or key message of the episode.\n\n"
     "### Key points\n"
-    "- the substantive takeaways, one per bullet\n"
+    "- Every substantive idea, insight, or argument — aim for 8-12 bullets\n"
+    "- Be specific: name the frameworks, numbers, examples, and recommendations mentioned\n\n"
     "### Notable moments\n"
-    "- specific claims, examples, or quotes worth knowing\n"
+    "- Specific quotes, surprising claims, strong opinions, or memorable stories\n"
+    "- Include any data, studies, or references cited\n\n"
+    "### Action items\n"
+    "- Concrete advice, tools, books, or next steps the speakers recommended\n"
+    "- Omit this section entirely if the episode had none\n\n"
     "### Who should listen\n"
-    "One line. Keep the whole thing a 2-minute read."
+    "One sentence. Be specific about who gets the most value from this episode."
 )
 
 def summarize(transcript: str) -> str:
