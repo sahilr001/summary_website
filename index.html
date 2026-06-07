@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Earnote — podcasts, as documents you can actually read</title>
+<meta name="description" content="Paste any podcast episode link and get a readable summary delivered to your inbox. Earnote turns podcasts into documents you can actually read.">
+<link rel="canonical" href="https://earnote.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://earnote.app/">
+<meta property="og:title" content="Earnote — Podcasts as readable docs">
+<meta property="og:description" content="Paste any podcast episode link and get a readable summary delivered to your inbox.">
+<meta property="og:site_name" content="Earnote">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Earnote — Podcasts as readable docs">
+<meta name="twitter:description" content="Paste any podcast episode link and get a readable summary delivered to your inbox.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -131,8 +141,9 @@
     .step:last-child{border-bottom:none}
     .plans{grid-template-columns:1fr}
     .plan.free{border-right:none;border-bottom:2px solid var(--ink)}
-    h1{font-size:72px}
+    h1{font-size:clamp(48px,18vw,72px)}
     .pricing-head{flex-direction:column}
+    .wrap{padding:0 20px}
   }
 </style>
 </head>
@@ -156,17 +167,17 @@
   <div class="cta-block">
     <div class="wrap">
       <div class="cta-label">Paste a link → get the summary in your inbox</div>
-      <div class="cta-row">
+      <form id="summaryForm" class="cta-row" novalidate>
         <div class="cta-field">
           <label for="url">Episode URL</label>
-          <input id="url" type="url" placeholder="YouTube, Apple, Spotify or MP3 link…" />
+          <input id="url" name="url" type="url" placeholder="YouTube, Apple, Spotify or MP3 link…" required />
         </div>
         <div class="cta-field">
           <label for="email">Your email</label>
-          <input id="email" type="email" placeholder="you@email.com" />
+          <input id="email" name="email" type="email" placeholder="you@email.com" required />
         </div>
-        <button class="cta-submit" id="submitBtn">Send it →</button>
-      </div>
+        <button type="submit" class="cta-submit" id="submitBtn">Send it →</button>
+      </form>
       <div class="cta-note"><b>3 free summaries</b> &nbsp;·&nbsp; no account &nbsp;·&nbsp; no card</div>
       <div class="msg" id="msg"></div>
     </div>
@@ -219,7 +230,7 @@
   <div class="wrap">
     <div class="pricing-head">
       <h2>SIMPLE PRICING.</h2>
-      <p>Start free. Pro is coming for people who live in their podcast queue.</p>
+      <p>Planned Pro pricing for people who live in their podcast queue. Join the waitlist — no charge until it launches.</p>
     </div>
     <div class="plans">
       <div class="plan free">
@@ -240,7 +251,7 @@
           <li>Downloadable Word &amp; PDF docs</li>
           <li>Long episodes &amp; batch mode</li>
         </ul>
-        <button class="plan-cta" id="proBtn">Get early access →</button>
+        <button class="plan-cta" id="proBtn">Join Pro waitlist →</button>
       </div>
     </div>
   </div>
@@ -249,7 +260,7 @@
 <footer>
   <div class="wrap" style="width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
     <div class="footer-logo">Ear<span>note</span></div>
-    <p>Made for the chronically time-poor &nbsp;·&nbsp; <a href="#" id="reset" style="color:var(--ink-faint)">reset demo</a></p>
+    <p>Made for the chronically time-poor</p>
   </div>
 </footer>
 
@@ -261,7 +272,8 @@
   const msg = $("msg");
   function showMsg(text, kind){ msg.textContent = text; msg.className = "msg " + kind; }
 
-  $("submitBtn").addEventListener("click", async () => {
+  $("summaryForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
     const url = $("url").value.trim();
     const email = $("email").value.trim();
     if(!url || !/^https?:\/\//.test(url)){ showMsg("Paste a valid episode link (starting with http).", "err"); return; }
@@ -317,7 +329,7 @@
     } catch(e){ btn.disabled=false; btn.textContent="Get early access →"; showMsg("Couldn't reach the server — try again shortly.","err"); }
   });
 
-  $("reset").addEventListener("click", (e)=>{ e.preventDefault(); Object.keys(localStorage).filter(k=>k.startsWith("en_used_")).forEach(k=>localStorage.removeItem(k)); showMsg("Demo counter reset.","ok"); });
+  if(DEMO_MODE){ document.getElementById("reset") && document.getElementById("reset").addEventListener("click", (e)=>{ e.preventDefault(); Object.keys(localStorage).filter(k=>k.startsWith("en_used_")).forEach(k=>localStorage.removeItem(k)); showMsg("Demo counter reset.","ok"); }); }
 </script>
 </body>
 </html>
