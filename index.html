@@ -132,28 +132,46 @@
 
   /* ── pricing ── */
   .pricing{padding:64px 0}
-  .pricing-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px;flex-wrap:wrap;gap:12px}
-  .pricing-head h2{font-family:"Bebas Neue",sans-serif;font-size:clamp(42px,6vw,72px);letter-spacing:.02em;line-height:1}
-  .pricing-head p{font-size:14px;color:var(--ink-soft);max-width:360px}
-  .plans{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid var(--ink);border-radius:var(--r);overflow:hidden}
-  .plan{padding:32px}
+  .pricing-head{margin-bottom:32px}
+  .pricing-head h2{font-family:"Bebas Neue",sans-serif;font-size:clamp(42px,6vw,72px);letter-spacing:.02em;line-height:1;margin-bottom:8px}
+  .pricing-head p{font-size:14px;color:var(--ink-soft)}
+  .plans{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:2px solid var(--ink);border-radius:var(--r);overflow:hidden}
+  .plan{padding:28px}
   .plan.free{border-right:2px solid var(--ink)}
-  .plan.pro{background:var(--block);color:var(--block-text)}
+  .plan.starter{border-right:2px solid var(--ink);background:var(--bg)}
+  .plan.power{background:var(--block);color:var(--block-text)}
   .plan-tag{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--ink-faint);margin-bottom:16px}
-  .plan.pro .plan-tag{color:rgba(255,254,249,.4)}
-  .plan-price{font-family:"Bebas Neue",sans-serif;font-size:64px;letter-spacing:.01em;line-height:1;margin-bottom:4px}
-  .plan-price small{font-family:"DM Sans",sans-serif;font-size:16px;font-weight:400;opacity:.55}
-  .plan-features{list-style:none;margin:20px 0 28px}
-  .plan-features li{font-size:14px;color:var(--ink-soft);padding:7px 0;border-bottom:1px solid var(--line);
+    color:var(--ink-faint);margin-bottom:14px}
+  .plan.power .plan-tag{color:rgba(255,254,249,.4)}
+  .plan-price{font-family:"Bebas Neue",sans-serif;font-size:56px;letter-spacing:.01em;line-height:1;margin-bottom:4px}
+  .plan-price small{font-family:"DM Sans",sans-serif;font-size:14px;font-weight:400;opacity:.55}
+  .plan-features{list-style:none;margin:16px 0 24px}
+  .plan-features li{font-size:14px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--line);
     display:flex;align-items:center;gap:10px}
-  .plan.pro .plan-features li{color:rgba(255,254,249,.65);border-color:rgba(255,254,249,.1)}
+  .plan.power .plan-features li{color:rgba(255,254,249,.65);border-color:rgba(255,254,249,.1)}
   .plan-features li::before{content:"→";font-family:"DM Mono",monospace;color:var(--accent);font-size:12px;flex-shrink:0}
-  .plan-cta{width:100%;padding:14px;border-radius:var(--r);font-weight:600;font-size:15px;letter-spacing:.02em;text-align:center}
+  .plan-cta{width:100%;padding:13px;border-radius:var(--r);font-weight:600;font-size:14px;letter-spacing:.02em;
+    text-align:center;transition:background .12s,transform .08s,opacity .12s;cursor:pointer;border:none;font:inherit}
+  .plan-cta:active{transform:scale(.98)}
+  .plan-cta:disabled{opacity:.45;cursor:default}
   .plan.free .plan-cta{background:transparent;border:2px solid var(--ink);color:var(--ink)}
   .plan.free .plan-cta:hover{background:var(--ink);color:var(--bg)}
-  .plan.pro .plan-cta{background:var(--accent);color:#fff}
-  .plan.pro .plan-cta:hover{background:var(--accent-dark)}
+  .plan.starter .plan-cta{background:var(--ink);color:var(--bg)}
+  .plan.starter .plan-cta:hover{opacity:.85}
+  .plan.power .plan-cta{background:var(--accent);color:#fff}
+  .plan.power .plan-cta:hover{background:var(--accent-dark)}
+  /* pro waitlist row */
+  .pro-waitlist{margin-top:20px;padding:20px 24px;border:1.5px solid var(--line);border-radius:var(--r);
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .pro-waitlist-copy h3{font-size:15px;font-weight:600;margin-bottom:4px}
+  .pro-waitlist-copy p{font-size:13px;color:var(--ink-soft)}
+  .pro-waitlist-btn{background:transparent;border:1.5px solid var(--ink);color:var(--ink);
+    font-weight:600;font-size:14px;padding:10px 20px;border-radius:var(--r);
+    transition:background .12s;white-space:nowrap;cursor:pointer;font:inherit}
+  .pro-waitlist-btn:hover{background:var(--ink);color:var(--bg)}
+  /* trust note */
+  .trust-note{margin-top:16px;font-size:12px;color:var(--ink-faint);font-family:"DM Mono",monospace;
+    letter-spacing:.03em;text-align:center}
 
   /* ── footer ── */
   footer{border-top:2px solid var(--ink);padding:20px 0}
@@ -174,6 +192,8 @@
     .audience-col:last-child{border-bottom:none}
     .plans{grid-template-columns:1fr}
     .plan.free{border-right:none;border-bottom:2px solid var(--ink)}
+    .plan.starter{border-right:none;border-bottom:2px solid var(--ink)}
+    .pro-waitlist{flex-direction:column;align-items:flex-start}
     h1{font-size:clamp(48px,18vw,72px)}
     .pricing-head{flex-direction:column}
     .wrap{padding:0 20px}
@@ -213,7 +233,7 @@
         <button type="submit" class="cta-submit" id="submitBtn">Send it →</button>
       </form>
       <div class="cta-footer">
-        <div class="cta-note"><b>3 free briefs</b> &nbsp;·&nbsp; no account &nbsp;·&nbsp; no card</div>
+        <div class="cta-note"><b>3 free briefs</b> &nbsp;·&nbsp; then buy credits &nbsp;·&nbsp; no subscription</div>
         <a href="/example.html" class="cta-example">See an example brief →</a>
       </div>
       <div class="msg" id="msg"></div>
@@ -318,15 +338,15 @@
 </section>
 
 <!-- 6. Pricing -->
-<section class="pricing">
+<section class="pricing" id="pricing">
   <div class="wrap">
     <div class="pricing-head">
-      <h2>SIMPLE PRICING.</h2>
-      <p>Start free. Pro is planned for people who live in their podcast queue.</p>
+      <h2>START FREE.<br>PAY WHEN YOU NEED MORE.</h2>
+      <p>Buy credits when your queue gets out of hand. No subscription required.</p>
     </div>
     <div class="plans">
       <div class="plan free">
-        <div class="plan-tag">Free tier</div>
+        <div class="plan-tag">Free</div>
         <div class="plan-price">$0</div>
         <ul class="plan-features">
           <li>3 episode briefs</li>
@@ -335,17 +355,35 @@
         </ul>
         <button class="plan-cta" onclick="document.getElementById('url').focus();window.scrollTo({top:0,behavior:'smooth'})">Start free</button>
       </div>
-      <div class="plan pro">
-        <div class="plan-tag">Pro · waitlist</div>
-        <div class="plan-price">$9<small> / mo</small></div>
+      <div class="plan starter">
+        <div class="plan-tag">Starter</div>
+        <div class="plan-price">$5</div>
         <ul class="plan-features">
-          <li>Unlimited briefs</li>
-          <li>Downloadable Word &amp; PDF docs</li>
-          <li>Long episodes &amp; batch mode</li>
+          <li>10 episode briefs</li>
+          <li>Great for clearing your queue</li>
+          <li>No subscription</li>
         </ul>
-        <button class="plan-cta" id="proBtn">Join Pro waitlist →</button>
+        <button class="plan-cta" data-pack="starter_10" onclick="startCheckout('starter_10')">Buy 10 briefs →</button>
+      </div>
+      <div class="plan power">
+        <div class="plan-tag">Power</div>
+        <div class="plan-price">$19</div>
+        <ul class="plan-features">
+          <li>50 episode briefs</li>
+          <li>Best for researchers &amp; creators</li>
+          <li>No subscription</li>
+        </ul>
+        <button class="plan-cta" data-pack="power_50" onclick="startCheckout('power_50')">Buy 50 briefs →</button>
       </div>
     </div>
+    <div class="pro-waitlist">
+      <div class="pro-waitlist-copy">
+        <h3>Want unlimited briefs?</h3>
+        <p>We're exploring an unlimited plan for heavy listeners, researchers, and creators.</p>
+      </div>
+      <button class="pro-waitlist-btn" id="proBtn">Join Pro waitlist →</button>
+    </div>
+    <p class="trust-note">Earnote creates private briefs from links you submit. We do not publish your briefs. &nbsp;·&nbsp; <a href="/privacy.html" style="color:inherit">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html" style="color:inherit">Terms</a></p>
   </div>
 </section>
 
@@ -364,9 +402,10 @@
   const msg = $("msg");
   function showMsg(text, kind){ msg.textContent = text; msg.className = "msg " + kind; }
 
+  /* ── submit ── */
   $("summaryForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const url = $("url").value.trim();
+    const url   = $("url").value.trim();
     const email = $("email").value.trim();
     if(!url || !/^https?:\/\//.test(url)){ showMsg("Paste a valid episode link (starting with http).", "err"); return; }
     if(!email || !/.+@.+\..+/.test(email)){ showMsg("Add a valid email so we can send it to you.", "err"); return; }
@@ -374,8 +413,8 @@
     const btn = $("submitBtn"); btn.disabled = true; btn.textContent = "Sending…";
 
     if(DEMO_MODE){
-      const used = (+localStorage.getItem("en_used_"+email) || 0);
-      if(used >= 3){ showMsg("You've used all 3 free briefs. Join the Pro waitlist below.", "err"); btn.disabled=false; btn.textContent="Send it →"; $("proBtn").focus(); return; }
+      const used = (+localStorage.getItem("en_used_"+email)||0);
+      if(used>=3){ showMsg("You're out of free briefs. Buy a credit pack below to keep going.", "err"); btn.disabled=false; btn.textContent="Send it →"; document.getElementById("pricing").scrollIntoView({behavior:"smooth"}); return; }
       localStorage.setItem("en_used_"+email, used+1);
       setTimeout(()=>{ showMsg("On its way — check your inbox in a few minutes. ("+(2-used)+" free left)", "ok"); btn.disabled=false; btn.textContent="Send it →"; }, 700);
       return;
@@ -388,13 +427,17 @@
       });
       const data = await r.json().catch(()=>({}));
       if(r.status === 429){
-        showMsg("You've used all 3 free briefs. Join the Pro waitlist below.", "err");
-        $("proBtn").focus();
+        if(data.needs_payment){
+          showMsg("You're out of free briefs. Buy a credit pack below to keep going.", "err");
+          document.getElementById("pricing").scrollIntoView({behavior:"smooth"});
+        } else {
+          showMsg("Daily limit reached for this network. Try again tomorrow.", "err");
+        }
       } else if(!r.ok){
         showMsg(data.detail || "Something went wrong — try again in a moment.", "err");
       } else {
         const left = (data.remaining ?? "");
-        showMsg("Brief on its way — check your inbox in a few minutes." + (left!=="" ? " ("+left+" free left)" : ""), "ok");
+        showMsg("Brief on its way — check your inbox in a few minutes." + (left!==""?" ("+left+" free left)":""), "ok");
       }
     } catch(e){
       showMsg("Couldn't reach the server. Try again shortly.", "err");
@@ -403,25 +446,54 @@
     }
   });
 
+  /* ── stripe checkout ── */
+  async function startCheckout(pack) {
+    const email = $("email").value.trim();
+    if(!email || !/.+@.+\..+/.test(email)){
+      showMsg("Enter your email above first, then click buy.", "err");
+      $("email").focus();
+      window.scrollTo({top:0, behavior:"smooth"});
+      return;
+    }
+    const btn = document.querySelector(`[data-pack="${pack}"]`);
+    const origText = btn ? btn.textContent : "";
+    if(btn){ btn.disabled=true; btn.textContent="Loading…"; }
+    try{
+      const r = await fetch(BACKEND_URL + "/checkout", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ email, pack })
+      });
+      const data = await r.json().catch(()=>({}));
+      if(r.ok && data.url){
+        window.location.href = data.url;
+      } else {
+        showMsg(data.detail || "Couldn't start checkout — try again.", "err");
+        if(btn){ btn.disabled=false; btn.textContent=origText; }
+      }
+    } catch(e){
+      showMsg("Couldn't reach the server. Try again shortly.", "err");
+      if(btn){ btn.disabled=false; btn.textContent=origText; }
+    }
+  }
+
+  /* ── pro waitlist ── */
   $("proBtn").addEventListener("click", async () => {
     let email = $("email").value.trim();
     if(!email || !/.+@.+\..+/.test(email)){
       email = prompt("Enter your email to join the Pro waitlist:") || "";
       if(!/.+@.+\..+/.test(email)) return;
     }
-    const btn = $("proBtn"); btn.disabled = true; btn.textContent = "Adding you…";
-    const done = () => { showMsg("You're on the Pro waitlist. We'll email you when it opens.", "ok"); btn.textContent = "You're on the list ✓"; };
+    const btn = $("proBtn"); btn.disabled=true; btn.textContent="Adding you…";
+    const done = ()=>{ showMsg("You're on the Pro waitlist. We'll email you when it opens.", "ok"); btn.textContent="You're on the list ✓"; };
     if(DEMO_MODE){ setTimeout(done, 500); return; }
     try{
-      await fetch(BACKEND_URL + "/interest", {
+      await fetch(BACKEND_URL+"/interest", {
         method:"POST", headers:{"Content-Type":"application/json"},
         body: JSON.stringify({ email, plan:"pro_9" })
       });
       done();
     } catch(e){ btn.disabled=false; btn.textContent="Join Pro waitlist →"; showMsg("Couldn't reach the server — try again shortly.","err"); }
   });
-
-  if(DEMO_MODE){ document.getElementById("reset") && document.getElementById("reset").addEventListener("click", (e)=>{ e.preventDefault(); Object.keys(localStorage).filter(k=>k.startsWith("en_used_")).forEach(k=>localStorage.removeItem(k)); showMsg("Demo counter reset.","ok"); }); }
 </script>
 </body>
 </html>

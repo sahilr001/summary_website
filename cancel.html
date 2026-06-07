@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout Canceled — Earnote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FFFEF9;--ink:#0D0D0B;--ink-soft:#5A5750;--ink-faint:#A09890;--accent:#FF3B00;--r:4px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased}
+  body{background:var(--bg);color:var(--ink);font-family:"DM Sans",sans-serif;
+    min-height:100vh;display:flex;flex-direction:column}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+  header{border-bottom:2px solid var(--ink);padding:18px 0}
+  .hinner{display:flex;justify-content:space-between;align-items:center}
+  .logo{font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:.04em}
+  .logo span{color:var(--accent)}
+  .main{flex:1;display:flex;align-items:center;justify-content:center;padding:64px 28px}
+  .card{max-width:480px;width:100%;text-align:center}
+  .icon{font-size:40px;margin-bottom:24px;color:var(--ink-faint)}
+  h1{font-family:"Bebas Neue",sans-serif;font-size:clamp(42px,7vw,72px);letter-spacing:.01em;
+    line-height:.95;margin-bottom:20px}
+  p{font-size:16px;color:var(--ink-soft);line-height:1.65;margin-bottom:32px}
+  .btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .cta{display:inline-block;background:var(--accent);color:#fff;font-weight:600;
+    font-size:15px;padding:14px 28px;border-radius:var(--r);transition:background .12s}
+  .cta:hover{background:#CC2F00}
+  .cta.outline{background:transparent;border:2px solid var(--ink);color:var(--ink)}
+  .cta.outline:hover{background:var(--ink);color:var(--bg)}
+  footer{border-top:2px solid var(--ink);padding:18px 0}
+  footer p{font-size:13px;color:var(--ink-faint);font-family:"DM Mono",monospace}
+  .footer-logo{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.04em}
+  .footer-logo span{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hinner">
+    <a href="/" class="logo">Ear<span>note</span></a>
+  </div>
+</header>
+<div class="main">
+  <div class="card">
+    <div class="icon">×</div>
+    <h1>CHECKOUT<br>CANCELED.</h1>
+    <p>No charge was made. You can try again whenever you're ready — your free briefs are still available.</p>
+    <div class="btns">
+      <a href="/#pricing" class="cta">See credit packs →</a>
+      <a href="/" class="cta outline">Back to home</a>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div class="footer-logo">Ear<span>note</span></div>
+    <p><a href="/" style="color:var(--ink-faint)">earnote.app</a></p>
+  </div>
+</footer>
+</body>
+</html>

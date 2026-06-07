@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Earnote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FFFEF9;--ink:#0D0D0B;--ink-soft:#5A5750;--ink-faint:#A09890;--accent:#FF3B00;--line:rgba(13,13,11,.12);--r:4px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased}
+  body{background:var(--bg);color:var(--ink);font-family:"DM Sans",sans-serif;font-size:16px;line-height:1.6}
+  a{color:var(--accent)}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+  header{border-bottom:2px solid var(--ink);padding:18px 0}
+  .hinner{display:flex;justify-content:space-between;align-items:center}
+  .logo{font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:.04em;color:var(--ink);text-decoration:none}
+  .logo span{color:var(--accent)}
+  .nav-link{font-size:14px;font-weight:500;color:var(--ink-soft)}
+  .content{max-width:720px;padding:56px 0 80px}
+  .page-title{font-family:"Bebas Neue",sans-serif;font-size:clamp(42px,6vw,64px);letter-spacing:.01em;
+    line-height:.95;margin-bottom:8px}
+  .updated{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:40px}
+  h2{font-size:18px;font-weight:600;margin:36px 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  p{color:var(--ink-soft);margin-bottom:14px}
+  ul{color:var(--ink-soft);padding-left:20px;margin-bottom:14px}
+  li{margin-bottom:6px}
+  footer{border-top:2px solid var(--ink);padding:18px 0}
+  footer p{font-size:13px;color:var(--ink-faint);font-family:"DM Mono",monospace}
+  .footer-logo{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.04em}
+  .footer-logo span{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap hinner">
+    <a href="/" class="logo">Ear<span>note</span></a>
+    <a href="/" class="nav-link">← Back to home</a>
+  </div>
+</header>
+<div class="wrap">
+  <div class="content">
+    <h1 class="page-title">PRIVACY<br>POLICY.</h1>
+    <p class="updated">Last updated: June 2026</p>
+
+    <h2>What we collect</h2>
+    <p>When you use Earnote, we collect:</p>
+    <ul>
+      <li><strong>Your email address</strong> — to deliver your brief and track your credit balance.</li>
+      <li><strong>The episode URL you submit</strong> — to fetch and process the audio. We do not store the audio itself.</li>
+      <li><strong>The generated brief</strong> — stored temporarily to deliver to your inbox. We do not publish it.</li>
+      <li><strong>Your IP address</strong> — to enforce daily abuse limits. Not shared or sold.</li>
+      <li><strong>Basic usage events</strong> — anonymised (email-hashed) events like submission attempts and errors, for product improvement.</li>
+    </ul>
+
+    <h2>What we do not collect</h2>
+    <ul>
+      <li>We do not create accounts or store passwords.</li>
+      <li>We do not track you across other websites.</li>
+      <li>We do not sell or share your data with third parties for marketing.</li>
+    </ul>
+
+    <h2>Third-party services</h2>
+    <p>Earnote uses these services to operate:</p>
+    <ul>
+      <li><strong>AssemblyAI</strong> — audio transcription. Your episode audio is sent to AssemblyAI for processing.</li>
+      <li><strong>Anthropic (Claude)</strong> — brief generation. The transcript is sent to Anthropic's API.</li>
+      <li><strong>SendGrid (Twilio)</strong> — email delivery. Your email address and brief are processed by SendGrid.</li>
+      <li><strong>Stripe</strong> — payment processing. Card details are handled entirely by Stripe. We never see your card number. <a href="https://stripe.com/privacy" target="_blank">Stripe Privacy Policy</a>.</li>
+    </ul>
+
+    <h2>Data retention</h2>
+    <p>Your email address and submission history are stored in our database on an AWS EC2 server in the EU region. We retain this data to maintain your credit balance. You can request deletion at any time by emailing <a href="mailto:hello@earnote.app">hello@earnote.app</a>.</p>
+
+    <h2>Payments</h2>
+    <p>Credit purchases are processed by Stripe. Earnote receives a confirmation that payment succeeded and the pack purchased — we do not receive or store card details. Stripe's privacy policy governs their handling of your payment data.</p>
+
+    <h2>Your rights</h2>
+    <p>You can request a copy of your data, correction of inaccurate data, or deletion of your account and associated data by contacting <a href="mailto:hello@earnote.app">hello@earnote.app</a>.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy: <a href="mailto:hello@earnote.app">hello@earnote.app</a> or via the <a href="/contact.html">contact page</a>.</p>
+  </div>
+</div>
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div class="footer-logo">Ear<span>note</span></div>
+    <p><a href="/" style="color:var(--ink-faint)">earnote.app</a></p>
+  </div>
+</footer>
+</body>
+</html>
