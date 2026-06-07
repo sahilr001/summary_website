@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Example Brief — Earnote</title>
+<meta name="description" content="See what an Earnote brief looks like. A sample structured summary of a podcast episode.">
+<link rel="canonical" href="https://earnote.app/example.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://earnote.app/example.html">
+<meta property="og:title" content="Example Brief — Earnote">
+<meta property="og:description" content="See what an Earnote brief looks like.">
+<meta property="og:site_name" content="Earnote">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFEF9; --ink:#0D0D0B; --ink-soft:#5A5750; --ink-faint:#A09890;
+    --accent:#FF3B00; --accent-dark:#CC2F00;
+    --block:#0D0D0B; --block-text:#FFFEF9;
+    --line:rgba(13,13,11,0.12);
+    --r:4px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-font-smoothing:antialiased}
+  body{background:var(--bg);color:var(--ink);font-family:"DM Sans",sans-serif;font-size:16px;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+
+  header{border-bottom:2px solid var(--ink);padding:18px 0}
+  .hinner{display:flex;justify-content:space-between;align-items:center}
+  .logo{font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:.04em}
+  .logo span{color:var(--accent)}
+  .nav-link{font-size:14px;font-weight:500;color:var(--ink-soft);transition:color .15s}
+  .nav-link:hover{color:var(--accent)}
+
+  /* ── sample badge ── */
+  .sample-bar{background:#FFF8E6;border-bottom:2px solid #F0D080;padding:10px 0}
+  .sample-inner{display:flex;align-items:center;gap:12px}
+  .sample-label{font-family:"DM Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;
+    text-transform:uppercase;background:#F0D080;color:#7A5800;padding:3px 9px;border-radius:var(--r)}
+  .sample-text{font-size:13px;color:#7A5800}
+
+  /* ── brief layout ── */
+  .brief-page{display:grid;grid-template-columns:300px 1fr;gap:0;min-height:calc(100vh - 120px)}
+  .brief-sidebar{border-right:2px solid var(--ink);padding:40px 32px 40px 0}
+  .brief-main{padding:40px 0 40px 40px}
+
+  /* sidebar */
+  .ep-kicker{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:12px}
+  .ep-title{font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:.02em;line-height:1.1;
+    color:var(--ink);margin-bottom:16px}
+  .ep-meta{display:flex;flex-direction:column;gap:8px;padding-top:16px;border-top:1px solid var(--line)}
+  .ep-meta-row{display:flex;justify-content:space-between;font-size:13px}
+  .ep-meta-row span:first-child{color:var(--ink-faint);font-family:"DM Mono",monospace;font-size:11px;
+    text-transform:uppercase;letter-spacing:.08em}
+  .ep-meta-row span:last-child{color:var(--ink-soft);font-weight:500}
+  .try-cta{margin-top:28px;background:var(--accent);color:#fff;font-weight:600;font-size:14px;
+    padding:12px 20px;border-radius:var(--r);display:block;text-align:center;transition:background .12s}
+  .try-cta:hover{background:var(--accent-dark)}
+
+  /* main brief */
+  .brief-overview{font-size:16px;color:var(--ink-soft);line-height:1.7;margin-bottom:32px;
+    padding-bottom:24px;border-bottom:3px solid var(--accent)}
+
+  .brief-section{margin-bottom:28px}
+  .brief-section-head{background:var(--accent);padding:8px 16px;border-radius:var(--r) var(--r) 0 0}
+  .brief-section-head span{font-family:"DM Mono",monospace;font-size:10px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:#fff}
+  .brief-section-body{background:#fafafa;border:1px solid #ebebeb;border-top:none;
+    border-radius:0 0 var(--r) var(--r);padding:6px 16px 4px}
+  .brief-section-body li{list-style:none;font-size:15px;color:#333;padding:9px 0;
+    border-bottom:1px solid #efefef;display:flex;align-items:baseline;gap:10px;line-height:1.55}
+  .brief-section-body li:last-child{border-bottom:none}
+  .brief-section-body li::before{content:"→";font-family:"DM Mono",monospace;
+    color:var(--accent);font-size:12px;font-weight:700;flex-shrink:0}
+
+  footer{border-top:2px solid var(--ink);padding:20px 0}
+  footer p{font-size:13px;color:var(--ink-faint);font-family:"DM Mono",monospace}
+  .footer-logo{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.04em}
+  .footer-logo span{color:var(--accent)}
+
+  @media(max-width:700px){
+    .brief-page{grid-template-columns:1fr}
+    .brief-sidebar{border-right:none;border-bottom:2px solid var(--ink);padding:32px 0}
+    .brief-main{padding:32px 0}
+    .wrap{padding:0 20px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hinner">
+    <a href="/" class="logo">Ear<span>note</span></a>
+    <a href="/" class="nav-link">← Try it free</a>
+  </div>
+</header>
+
+<div class="sample-bar">
+  <div class="wrap sample-inner">
+    <span class="sample-label">Sample</span>
+    <span class="sample-text">This is a fictional example brief — not from a real episode. Your actual briefs are based on the episode you submit.</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="brief-page">
+
+    <aside class="brief-sidebar">
+      <div class="ep-kicker">Earnote brief</div>
+      <div class="ep-title">How to Build a Business That Doesn't Need You</div>
+      <div class="ep-meta">
+        <div class="ep-meta-row">
+          <span>Original length</span>
+          <span>1h 52m</span>
+        </div>
+        <div class="ep-meta-row">
+          <span>Brief read time</span>
+          <span>~5 min</span>
+        </div>
+        <div class="ep-meta-row">
+          <span>Episode type</span>
+          <span>Interview</span>
+        </div>
+      </div>
+      <a href="/" class="try-cta">Try your own episode →</a>
+    </aside>
+
+    <main class="brief-main">
+
+      <p class="brief-overview">
+        In this interview, entrepreneur and author Marcus Holt discusses the systems and mindset shifts required to build a business that can operate without the founder's constant involvement. Drawing on his experience scaling three companies and then stepping back from day-to-day operations, Holt argues that most founders are the biggest bottleneck in their own businesses — and that the solution isn't hiring more people, but redesigning how decisions get made.
+      </p>
+
+      <div class="brief-section">
+        <div class="brief-section-head"><span>Main thesis</span></div>
+        <div class="brief-section-body">
+          <ul>
+            <li>A business that depends on the founder to function is not an asset — it's a job. True leverage comes from building systems that make good decisions without you.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="brief-section">
+        <div class="brief-section-head"><span>Key ideas</span></div>
+        <div class="brief-section-body">
+          <ul>
+            <li>Most founders confuse being busy with being valuable. Busyness often signals a systems problem, not a workload problem.</li>
+            <li>The "founder dependency test": if you took a month off with no contact, would the business run? If not, you have a bottleneck, not a business.</li>
+            <li>Document decisions before you delegate them. Teams can't follow a process that only exists in your head.</li>
+            <li>Holt's "decision levels" framework: categorise every recurring decision as Level 1 (anyone), Level 2 (manager), or Level 3 (founder-only). The goal is to shrink the Level 3 list every quarter.</li>
+            <li>Hiring for "culture fit" without defined values is just hiring people you like — it doesn't produce alignment.</li>
+            <li>The best managers are not the best operators. Promotion paths that reward doing over leading create management problems.</li>
+            <li>Automation should come after documentation. Automating a broken process just makes it faster to produce bad outcomes.</li>
+            <li>Most businesses under-invest in onboarding. A new hire's first 30 days determines whether they become autonomous or dependent.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="brief-section">
+        <div class="brief-section-head"><span>Notable moments</span></div>
+        <div class="brief-section-body">
+          <ul>
+            <li>"I was working 70-hour weeks and growing 40% year-over-year. I thought I was winning. I was actually just delaying the collapse."</li>
+            <li>Holt references a study showing founder-led companies have 3× higher employee turnover in the first two years compared to professionally managed businesses of similar size.</li>
+            <li>The interviewer pushed back on whether this applies to early-stage companies — Holt agreed the approach changes before product-market fit, but argued most founders don't adjust after they find it.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="brief-section">
+        <div class="brief-section-head"><span>Action items</span></div>
+        <div class="brief-section-body">
+          <ul>
+            <li>Audit your last two weeks: list every decision you made and classify it by level. Anything that could have been Level 1 or 2 is a systems gap.</li>
+            <li>Write a "how we decide" doc for your three most common recurring decisions and share it with your team this week.</li>
+            <li>Book: <em>The E-Myth Revisited</em> — Holt says it shaped his early thinking on systems versus heroics.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="brief-section">
+        <div class="brief-section-head"><span>Who should listen</span></div>
+        <div class="brief-section-body">
+          <ul>
+            <li>Founders and operators of businesses with 5–50 people who feel like they can't step back — or who want to before they burn out.</li>
+          </ul>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap" style="width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div class="footer-logo">Ear<span>note</span></div>
+    <p>Made for the chronically time-poor &nbsp;·&nbsp; <a href="/" style="color:var(--ink-faint)">earnote.app</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

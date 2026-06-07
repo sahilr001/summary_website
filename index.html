@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Earnote — podcasts, as documents you can actually read</title>
-<meta name="description" content="Paste any podcast episode link and get a readable summary delivered to your inbox. Earnote turns podcasts into documents you can actually read.">
+<title>Earnote — Turn podcasts into readable briefs</title>
+<meta name="description" content="Paste any podcast episode link and get a readable brief delivered to your inbox. Earnote helps you keep up with long podcasts without listening to every minute.">
 <link rel="canonical" href="https://earnote.app/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://earnote.app/">
-<meta property="og:title" content="Earnote — Podcasts as readable docs">
-<meta property="og:description" content="Paste any podcast episode link and get a readable summary delivered to your inbox.">
+<meta property="og:title" content="Earnote — Podcasts as readable briefs">
+<meta property="og:description" content="Turn long podcast episodes into structured notes you can read, save, and revisit.">
 <meta property="og:site_name" content="Earnote">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Earnote — Podcasts as readable docs">
-<meta name="twitter:description" content="Paste any podcast episode link and get a readable summary delivered to your inbox.">
+<meta name="twitter:title" content="Earnote — Podcasts as readable briefs">
+<meta name="twitter:description" content="Turn long podcast episodes into structured notes you can read, save, and revisit.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -31,7 +31,6 @@
   a{color:inherit;text-decoration:none}
   button{font:inherit;cursor:pointer;border:none}
 
-  /* ── layout ── */
   .wrap{max-width:1040px;margin:0 auto;padding:0 28px}
 
   /* ── header ── */
@@ -54,38 +53,59 @@
   h1 .accent{color:var(--accent)}
 
   /* ── CTA block ── */
-  .cta-block{background:var(--block);color:var(--block-text);
-    margin-top:0;padding:36px 40px 40px;
-    border-top:2px solid var(--ink)}
+  .cta-block{background:var(--block);color:var(--block-text);padding:36px 40px 40px;border-top:2px solid var(--ink)}
   .cta-label{font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
     color:rgba(255,254,249,.45);margin-bottom:20px}
   .cta-row{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}
   .cta-field label{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
     color:rgba(255,254,249,.5);margin-bottom:7px}
   .cta-field input{width:100%;background:rgba(255,254,249,.07);border:1.5px solid rgba(255,254,249,.18);
-    border-radius:var(--r);padding:13px 14px;font:inherit;font-size:15px;color:var(--block-text);
-    transition:border-color .15s}
+    border-radius:var(--r);padding:13px 14px;font:inherit;font-size:15px;color:var(--block-text);transition:border-color .15s}
   .cta-field input::placeholder{color:rgba(255,254,249,.3)}
   .cta-field input:focus{outline:none;border-color:var(--accent)}
   .cta-submit{background:var(--accent);color:#fff;font-weight:600;font-size:15px;letter-spacing:.02em;
-    padding:13px 24px;border-radius:var(--r);white-space:nowrap;
-    transition:background .12s,transform .08s;align-self:end}
+    padding:13px 24px;border-radius:var(--r);white-space:nowrap;transition:background .12s,transform .08s;align-self:end}
   .cta-submit:hover{background:var(--accent-dark)}
   .cta-submit:active{transform:scale(.98)}
   .cta-submit:disabled{opacity:.45;cursor:default}
-  .cta-note{margin-top:14px;font-size:12px;color:rgba(255,254,249,.35);
-    font-family:"DM Mono",monospace;letter-spacing:.04em}
+  .cta-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .cta-note{font-size:12px;color:rgba(255,254,249,.35);font-family:"DM Mono",monospace;letter-spacing:.04em}
   .cta-note b{color:rgba(255,254,249,.6)}
+  .cta-example{font-size:12px;color:rgba(255,254,249,.45);font-family:"DM Mono",monospace;
+    letter-spacing:.04em;transition:color .15s}
+  .cta-example:hover{color:rgba(255,254,249,.8)}
   .msg{margin-top:14px;font-size:14px;padding:11px 14px;border-radius:var(--r);display:none}
   .msg.ok{display:block;background:rgba(80,200,120,.15);color:#7fffb2;border:1px solid rgba(80,200,120,.3)}
   .msg.err{display:block;background:rgba(255,59,0,.12);color:#ff8060;border:1px solid rgba(255,59,0,.25)}
+
+  /* ── what you get ── */
+  .preview{padding:64px 0;border-bottom:2px solid var(--ink)}
+  .preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid var(--ink);border-radius:var(--r);overflow:hidden;margin-top:40px}
+  .preview-col{padding:32px}
+  .preview-col.original{background:var(--bg);border-right:2px solid var(--ink)}
+  .preview-col.brief{background:var(--block);color:var(--block-text)}
+  .preview-tag{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    margin-bottom:16px}
+  .preview-col.original .preview-tag{color:var(--ink-faint)}
+  .preview-col.brief .preview-tag{color:rgba(255,254,249,.4)}
+  .preview-duration{font-family:"Bebas Neue",sans-serif;font-size:42px;letter-spacing:.01em;line-height:1;margin-bottom:8px}
+  .preview-col.brief .preview-duration{color:var(--accent)}
+  .preview-sub{font-size:14px;color:var(--ink-soft);margin-bottom:20px}
+  .preview-col.brief .preview-sub{color:rgba(255,254,249,.5)}
+  .preview-items{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .preview-items li{font-size:14px;display:flex;align-items:center;gap:10px}
+  .preview-col.original .preview-items li{color:var(--ink-soft)}
+  .preview-col.brief .preview-items li{color:rgba(255,254,249,.75)}
+  .preview-items li::before{font-family:"DM Mono",monospace;font-size:12px;flex-shrink:0}
+  .preview-col.original .preview-items li::before{content:"—";color:var(--ink-faint)}
+  .preview-col.brief .preview-items li::before{content:"→";color:var(--accent)}
+  .preview-caption{margin-top:28px;font-size:14px;color:var(--ink-soft);max-width:600px}
 
   /* ── marquee strip ── */
   .strip{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
     background:var(--accent);overflow:hidden;padding:11px 0;white-space:nowrap}
   .strip-inner{display:inline-flex;gap:0;animation:scroll 18s linear infinite}
-  .strip-item{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.06em;
-    color:#fff;padding:0 28px}
+  .strip-item{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.06em;color:#fff;padding:0 28px}
   .strip-dot{color:rgba(255,255,255,.5)}
   @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
@@ -100,6 +120,15 @@
   .step-num{font-family:"Bebas Neue",sans-serif;font-size:48px;color:var(--accent);line-height:1;margin-bottom:14px}
   .step h3{font-size:18px;font-weight:600;margin-bottom:8px}
   .step p{font-size:14px;color:var(--ink-soft);line-height:1.6}
+
+  /* ── audience ── */
+  .audience{padding:64px 0;border-bottom:2px solid var(--ink)}
+  .audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:40px}
+  .audience-col{padding:0 28px 0 0;border-right:2px solid var(--ink)}
+  .audience-col:last-child{border-right:none;padding-right:0;padding-left:28px}
+  .audience-col:nth-child(2){padding-left:28px}
+  .audience-col h3{font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:.04em;margin-bottom:12px}
+  .audience-col p{font-size:14px;color:var(--ink-soft);line-height:1.65}
 
   /* ── pricing ── */
   .pricing{padding:64px 0}
@@ -127,8 +156,7 @@
   .plan.pro .plan-cta:hover{background:var(--accent-dark)}
 
   /* ── footer ── */
-  footer{border-top:2px solid var(--ink);padding:20px 0;display:flex;
-    justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  footer{border-top:2px solid var(--ink);padding:20px 0}
   .footer-logo{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.04em}
   .footer-logo span{color:var(--accent)}
   footer p{font-size:13px;color:var(--ink-faint);font-family:"DM Mono",monospace}
@@ -136,9 +164,14 @@
   /* ── responsive ── */
   @media(max-width:700px){
     .cta-row{grid-template-columns:1fr}
-    .steps{grid-template-columns:1fr;gap:0}
+    .steps{grid-template-columns:1fr}
     .step{border-right:none;border-bottom:2px solid var(--ink);padding:24px 0!important}
     .step:last-child{border-bottom:none}
+    .preview-grid{grid-template-columns:1fr}
+    .preview-col.original{border-right:none;border-bottom:2px solid var(--ink)}
+    .audience-grid{grid-template-columns:1fr}
+    .audience-col{border-right:none;border-bottom:2px solid var(--ink);padding:24px 0!important}
+    .audience-col:last-child{border-bottom:none}
     .plans{grid-template-columns:1fr}
     .plan.free{border-right:none;border-bottom:2px solid var(--ink)}
     h1{font-size:clamp(48px,18vw,72px)}
@@ -159,14 +192,15 @@
   </div>
 </header>
 
+<!-- 1. Hero + CTA -->
 <section class="hero">
   <div class="wrap hero-top">
-    <div class="kicker">For people who'd rather read</div>
-    <h1>STOP<br>LISTENING.<br><span class="accent">START</span><br>READING.</h1>
+    <div class="kicker">For people with more podcast queue than free time</div>
+    <h1>READ THE<br>PODCASTS<br>YOU <span class="accent">DON'T</span><br>HAVE TIME FOR.</h1>
   </div>
   <div class="cta-block">
     <div class="wrap">
-      <div class="cta-label">Paste a link → get the summary in your inbox</div>
+      <div class="cta-label">Paste a podcast link → get a readable brief by email</div>
       <form id="summaryForm" class="cta-row" novalidate>
         <div class="cta-field">
           <label for="url">Episode URL</label>
@@ -178,31 +212,67 @@
         </div>
         <button type="submit" class="cta-submit" id="submitBtn">Send it →</button>
       </form>
-      <div class="cta-note"><b>3 free summaries</b> &nbsp;·&nbsp; no account &nbsp;·&nbsp; no card</div>
+      <div class="cta-footer">
+        <div class="cta-note"><b>3 free briefs</b> &nbsp;·&nbsp; no account &nbsp;·&nbsp; no card</div>
+        <a href="/example.html" class="cta-example">See an example brief →</a>
+      </div>
       <div class="msg" id="msg"></div>
     </div>
   </div>
 </section>
 
-<!-- scrolling strip -->
+<!-- 2. What You Get -->
+<section class="preview">
+  <div class="wrap">
+    <div class="section-label">What you get</div>
+    <div class="preview-grid">
+      <div class="preview-col original">
+        <div class="preview-tag">Original episode</div>
+        <div class="preview-duration">2h 13m</div>
+        <div class="preview-sub">Long-form interview</div>
+        <ul class="preview-items">
+          <li>Press play and clear your schedule</li>
+          <li>Hope the good part isn't at minute 90</li>
+          <li>No way to skim or search</li>
+          <li>Saved to queue, probably forever</li>
+        </ul>
+      </div>
+      <div class="preview-col brief">
+        <div class="preview-tag">Earnote brief</div>
+        <div class="preview-duration">6 min read</div>
+        <div class="preview-sub">Structured notes in your inbox</div>
+        <ul class="preview-items">
+          <li>Key ideas</li>
+          <li>Notable moments</li>
+          <li>Practical takeaways</li>
+          <li>Who should read it</li>
+        </ul>
+      </div>
+    </div>
+    <p class="preview-caption">Earnote turns long conversations into structured notes you can scan, save, and come back to.</p>
+  </div>
+</section>
+
+<!-- 3. Marquee strip -->
 <div class="strip">
   <div class="strip-inner">
-    <span class="strip-item">WORKS WITH ANY PODCAST</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">LONG EPISODES → SHORT BRIEFS</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">READ BEFORE YOU LISTEN</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">SAVE THE BEST IDEAS</span><span class="strip-item strip-dot">✦</span>
     <span class="strip-item">NO APP TO INSTALL</span><span class="strip-item strip-dot">✦</span>
-    <span class="strip-item">IN YOUR INBOX IN MINUTES</span><span class="strip-item strip-dot">✦</span>
-    <span class="strip-item">3 HOURS → 2 MINUTES</span><span class="strip-item strip-dot">✦</span>
-    <span class="strip-item">FREE TO START</span><span class="strip-item strip-dot">✦</span>
-    <span class="strip-item">NO ACCOUNT NEEDED</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">3 FREE BRIEFS</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">SEARCHABLE NOTES</span><span class="strip-item strip-dot">✦</span>
     <!-- duplicate for seamless loop -->
-    <span class="strip-item">WORKS WITH ANY PODCAST</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">LONG EPISODES → SHORT BRIEFS</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">READ BEFORE YOU LISTEN</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">SAVE THE BEST IDEAS</span><span class="strip-item strip-dot">✦</span>
     <span class="strip-item">NO APP TO INSTALL</span><span class="strip-item strip-dot">✦</span>
-    <span class="strip-item">IN YOUR INBOX IN MINUTES</span><span class="strip-item strip-dot">✦</span>
-    <span class="strip-item">3 HOURS → 2 MINUTES</span><span class="strip-item strip-dot">✦</span>
-    <span class="strip-item">FREE TO START</span><span class="strip-item strip-dot">✦</span>
-    <span class="strip-item">NO ACCOUNT NEEDED</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">3 FREE BRIEFS</span><span class="strip-item strip-dot">✦</span>
+    <span class="strip-item">SEARCHABLE NOTES</span><span class="strip-item strip-dot">✦</span>
   </div>
 </div>
 
+<!-- 4. How it works -->
 <section class="how">
   <div class="wrap">
     <div class="section-label">How it works</div>
@@ -210,44 +280,66 @@
       <div class="step">
         <div class="step-num">01</div>
         <h3>Drop a link</h3>
-        <p>Any episode URL or a direct audio file. YouTube, Apple Podcasts, Spotify, or a raw MP3.</p>
+        <p>Paste a YouTube, Apple Podcasts, Spotify, or direct audio link. We handle the rest.</p>
       </div>
       <div class="step">
         <div class="step-num">02</div>
-        <h3>We transcribe & distil</h3>
-        <p>Full episode transcribed, then condensed into key points, themes, and notable moments.</p>
+        <h3>We turn it into a brief</h3>
+        <p>Earnote transcribes the episode and extracts the key ideas, themes, and useful moments.</p>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <h3>Read it in your inbox</h3>
-        <p>A formatted summary arrives by email — usually within a few minutes of submitting.</p>
+        <p>A structured brief arrives by email so you can scan the episode without clearing your schedule.</p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- 5. Audience -->
+<section class="audience">
+  <div class="wrap">
+    <div class="section-label">Built for the queue you never finish</div>
+    <div class="audience-grid">
+      <div class="audience-col">
+        <h3>Professionals</h3>
+        <p>Keep up with business, tech, and industry podcasts without losing the afternoon.</p>
+      </div>
+      <div class="audience-col">
+        <h3>Researchers</h3>
+        <p>Turn long interviews into structured notes you can revisit, cite, and build on.</p>
+      </div>
+      <div class="audience-col">
+        <h3>Creators</h3>
+        <p>Pull ideas, references, and takeaways from conversations faster than re-listening.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Pricing -->
 <section class="pricing">
   <div class="wrap">
     <div class="pricing-head">
       <h2>SIMPLE PRICING.</h2>
-      <p>Planned Pro pricing for people who live in their podcast queue. Join the waitlist — no charge until it launches.</p>
+      <p>Start free. Pro is planned for people who live in their podcast queue.</p>
     </div>
     <div class="plans">
       <div class="plan free">
         <div class="plan-tag">Free tier</div>
         <div class="plan-price">$0</div>
         <ul class="plan-features">
-          <li>3 episode summaries</li>
+          <li>3 episode briefs</li>
           <li>Delivered to your inbox</li>
           <li>No account, no card</li>
         </ul>
         <button class="plan-cta" onclick="document.getElementById('url').focus();window.scrollTo({top:0,behavior:'smooth'})">Start free</button>
       </div>
       <div class="plan pro">
-        <div class="plan-tag">Pro · early access</div>
+        <div class="plan-tag">Pro · waitlist</div>
         <div class="plan-price">$9<small> / mo</small></div>
         <ul class="plan-features">
-          <li>Unlimited summaries</li>
+          <li>Unlimited briefs</li>
           <li>Downloadable Word &amp; PDF docs</li>
           <li>Long episodes &amp; batch mode</li>
         </ul>
@@ -283,7 +375,7 @@
 
     if(DEMO_MODE){
       const used = (+localStorage.getItem("en_used_"+email) || 0);
-      if(used >= 3){ showMsg("You've used all 3 free summaries. Pro is coming — grab early access below.", "err"); btn.disabled=false; btn.textContent="Send it →"; $("proBtn").focus(); return; }
+      if(used >= 3){ showMsg("You've used all 3 free briefs. Join the Pro waitlist below.", "err"); btn.disabled=false; btn.textContent="Send it →"; $("proBtn").focus(); return; }
       localStorage.setItem("en_used_"+email, used+1);
       setTimeout(()=>{ showMsg("On its way — check your inbox in a few minutes. ("+(2-used)+" free left)", "ok"); btn.disabled=false; btn.textContent="Send it →"; }, 700);
       return;
@@ -296,13 +388,13 @@
       });
       const data = await r.json().catch(()=>({}));
       if(r.status === 429){
-        showMsg("You've used all 3 free summaries. Pro is coming — grab early access below.", "err");
+        showMsg("You've used all 3 free briefs. Join the Pro waitlist below.", "err");
         $("proBtn").focus();
       } else if(!r.ok){
         showMsg(data.detail || "Something went wrong — try again in a moment.", "err");
       } else {
         const left = (data.remaining ?? "");
-        showMsg("On its way — check your inbox in a few minutes." + (left!=="" ? " ("+left+" free left)" : ""), "ok");
+        showMsg("Brief on its way — check your inbox in a few minutes." + (left!=="" ? " ("+left+" free left)" : ""), "ok");
       }
     } catch(e){
       showMsg("Couldn't reach the server. Try again shortly.", "err");
@@ -314,11 +406,11 @@
   $("proBtn").addEventListener("click", async () => {
     let email = $("email").value.trim();
     if(!email || !/.+@.+\..+/.test(email)){
-      email = prompt("Enter your email for Pro early access:") || "";
+      email = prompt("Enter your email to join the Pro waitlist:") || "";
       if(!/.+@.+\..+/.test(email)) return;
     }
     const btn = $("proBtn"); btn.disabled = true; btn.textContent = "Adding you…";
-    const done = () => { showMsg("You're on the early-access list for Pro. We'll email you when it opens.", "ok"); btn.textContent = "You're on the list ✓"; };
+    const done = () => { showMsg("You're on the Pro waitlist. We'll email you when it opens.", "ok"); btn.textContent = "You're on the list ✓"; };
     if(DEMO_MODE){ setTimeout(done, 500); return; }
     try{
       await fetch(BACKEND_URL + "/interest", {
@@ -326,7 +418,7 @@
         body: JSON.stringify({ email, plan:"pro_9" })
       });
       done();
-    } catch(e){ btn.disabled=false; btn.textContent="Get early access →"; showMsg("Couldn't reach the server — try again shortly.","err"); }
+    } catch(e){ btn.disabled=false; btn.textContent="Join Pro waitlist →"; showMsg("Couldn't reach the server — try again shortly.","err"); }
   });
 
   if(DEMO_MODE){ document.getElementById("reset") && document.getElementById("reset").addEventListener("click", (e)=>{ e.preventDefault(); Object.keys(localStorage).filter(k=>k.startsWith("en_used_")).forEach(k=>localStorage.removeItem(k)); showMsg("Demo counter reset.","ok"); }); }
