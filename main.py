@@ -428,8 +428,6 @@ SUMMARY_SYSTEM_PROMPT = (
     "## <a short descriptive title>\n"
     "A 4-6 sentence overview: the main topic, the guest's background (if any), "
     "and the core argument or narrative arc of the episode.\n\n"
-    "### Main thesis\n"
-    "1-2 sentences stating the central claim or key message of the episode.\n\n"
     "### Key points\n"
     "- Every substantive idea, insight, or argument — aim for 8-12 bullets\n"
     "- Be specific: name the frameworks, numbers, examples, and recommendations mentioned\n\n"
@@ -468,8 +466,10 @@ def _parse_summary(summary: str) -> dict:
     sections = []
     for m in re.finditer(r'^### (.+)\n([\s\S]*?)(?=^###|\Z)', summary, re.MULTILINE):
         heading = m.group(1).strip()
+        if heading.lower() == "main thesis":
+            continue
         raw = m.group(2).strip()
-        bullets = [re.sub(r'^\*\*(.+)\*\*$', r'\1', b.lstrip('-• ').strip())
+        bullets = [re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', b.lstrip('-•* ').strip())
                    for b in raw.splitlines() if b.strip().startswith(('-', '•', '*'))]
         sections.append({"heading": heading, "bullets": bullets, "text": raw if not bullets else ""})
     return {"title": title, "overview": overview, "sections": sections}
