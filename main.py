@@ -475,7 +475,7 @@ def _parse_summary(summary: str) -> dict:
     return {"title": title, "overview": overview, "sections": sections}
 
 def _card(heading: str, bullets: list, text: str) -> str:
-    dot = '<span style="display:inline-block;width:6px;height:6px;background:#FF3B00;border-radius:50%;margin-right:11px;vertical-align:middle;flex-shrink:0;"></span>'
+    dot = '<span style="display:inline-block;width:6px;height:6px;background:#FF3B00;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>'
     rows = "".join(
         f'<tr><td style="padding:10px 0;border-bottom:1px solid #f5f5f5;font-size:14px;'
         f'color:#333;line-height:1.65;">{dot}{b}</td></tr>'
@@ -484,13 +484,20 @@ def _card(heading: str, bullets: list, text: str) -> str:
         f'<tr><td style="padding:10px 0;font-size:14px;color:#444;line-height:1.75;">{text}</td></tr>'
     )
     return f"""
-      <div style="margin:0 0 28px;">
-        <div style="display:flex;align-items:center;margin-bottom:12px;">
-          <div style="width:3px;height:16px;background:#FF3B00;border-radius:2px;margin-right:10px;"></div>
-          <span style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#999;">{heading}</span>
-        </div>
-        <table width="100%" cellpadding="0" cellspacing="0" border="0">{rows}</table>
-      </div>"""
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+        <tr>
+          <td width="4" style="background:#FF3B00;border-radius:2px;">&nbsp;</td>
+          <td width="10">&nbsp;</td>
+          <td style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#999;padding-bottom:10px;">{heading}</td>
+        </tr>
+        <tr>
+          <td width="4" style="background:#FF3B00;border-radius:2px;">&nbsp;</td>
+          <td width="10">&nbsp;</td>
+          <td>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">{rows}</table>
+          </td>
+        </tr>
+      </table>"""
 
 def send_email(to_email: str, summary: str) -> None:
     from sendgrid import SendGridAPIClient
@@ -504,51 +511,52 @@ def send_email(to_email: str, summary: str) -> None:
     AC = "#FF3B00"
 
     html = f"""
-    <div style="background:#e8e8e4;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
-    <div style="max-width:600px;margin:0 auto;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e8e8e4;">
+    <tr><td align="center" style="padding:32px 16px;">
+    <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;">
 
-      <table width="100%" cellpadding="0" cellspacing="0" border="0"
-        style="background:#0D0D0B;border-radius:10px 10px 0 0;">
-        <tr>
-          <td style="padding:22px 32px;">
-            <span style="font-size:22px;font-weight:900;letter-spacing:.08em;color:#fff;">
-              EAR<span style="color:{AC};">NOTE</span>
-            </span>
+      <!-- HEADER -->
+      <tr><td style="background:#0D0D0B;border-radius:10px 10px 0 0;padding:22px 32px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="font-size:22px;font-weight:900;letter-spacing:.08em;color:#ffffff;font-family:Arial,sans-serif;">
+            EAR<span style="color:{AC};">NOTE</span>
           </td>
-          <td style="padding:22px 32px;text-align:right;">
-            <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#555;">Podcast Brief</span>
+          <td align="right" style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#555;font-family:Arial,sans-serif;">
+            Podcast Brief
           </td>
-        </tr>
-      </table>
+        </tr></table>
+      </td></tr>
 
-      <div style="background:#ffffff;padding:36px 36px 24px;border-left:1px solid #ddd;border-right:1px solid #ddd;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:{AC};margin-bottom:10px;">Episode Brief</div>
-        <h1 style="font-size:26px;font-weight:700;color:#0D0D0B;line-height:1.25;margin:0 0 20px;font-family:Georgia,'Times New Roman',serif;">
+      <!-- BODY -->
+      <tr><td style="background:#ffffff;padding:36px 36px 28px;border-left:1px solid #ddd;border-right:1px solid #ddd;">
+        <p style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:{AC};margin:0 0 10px;font-family:Arial,sans-serif;">Episode Brief</p>
+        <h1 style="font-size:24px;font-weight:700;color:#0D0D0B;line-height:1.3;margin:0 0 18px;font-family:Georgia,'Times New Roman',serif;">
           {parsed["title"]}
         </h1>
-        <p style="font-size:15px;color:#444;line-height:1.75;margin:0 0 28px;">
+        <p style="font-size:15px;color:#444;line-height:1.75;margin:0 0 24px;font-family:Arial,sans-serif;">
           {parsed["overview"]}
         </p>
-        <div style="height:1px;background:#f0f0f0;margin-bottom:28px;"></div>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+          <tr><td style="height:1px;background:#f0f0f0;font-size:0;">&nbsp;</td></tr>
+        </table>
         {cards_html}
-      </div>
+      </td></tr>
 
-      <table width="100%" cellpadding="0" cellspacing="0" border="0"
-        style="background:#0D0D0B;border-radius:0 0 10px 10px;">
-        <tr>
-          <td style="padding:16px 32px;">
-            <span style="font-size:11px;color:#555;font-family:Arial,sans-serif;">
-              {datetime.now().strftime('%d %b %Y')}
-            </span>
+      <!-- FOOTER -->
+      <tr><td style="background:#0D0D0B;border-radius:0 0 10px 10px;padding:16px 32px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="font-size:11px;color:#555;font-family:Arial,sans-serif;">
+            {datetime.now().strftime('%d %b %Y')}
           </td>
-          <td style="padding:16px 32px;text-align:right;">
-            <a href="https://earnote.app" style="font-size:11px;color:{AC};text-decoration:none;font-weight:700;letter-spacing:.04em;">earnote.app</a>
+          <td align="right">
+            <a href="https://earnote.app" style="font-size:11px;color:{AC};text-decoration:none;font-weight:700;letter-spacing:.04em;font-family:Arial,sans-serif;">earnote.app</a>
           </td>
-        </tr>
-      </table>
+        </tr></table>
+      </td></tr>
 
-    </div>
-    </div>"""
+    </table>
+    </td></tr>
+    </table>"""
 
     message = Mail(
         from_email=os.environ["FROM_EMAIL"],
