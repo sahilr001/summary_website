@@ -475,24 +475,21 @@ def _parse_summary(summary: str) -> dict:
     return {"title": title, "overview": overview, "sections": sections}
 
 def _card(heading: str, bullets: list, text: str) -> str:
-    AC = "#FF3B00"
+    dot = '<span style="display:inline-block;width:6px;height:6px;background:#FF3B00;border-radius:50%;margin-right:11px;vertical-align:middle;flex-shrink:0;"></span>'
     rows = "".join(
-        f'<tr><td style="padding:9px 0;border-bottom:1px solid #efefef;font-size:15px;'
-        f'color:#333;line-height:1.55;">'
-        f'<span style="color:{AC};font-weight:700;margin-right:10px;">→</span>{b}</td></tr>'
+        f'<tr><td style="padding:10px 0;border-bottom:1px solid #f5f5f5;font-size:14px;'
+        f'color:#333;line-height:1.65;">{dot}{b}</td></tr>'
         for b in bullets
     ) if bullets else (
-        f'<tr><td style="padding:9px 0;font-size:15px;color:#444;line-height:1.65;">{text}</td></tr>'
+        f'<tr><td style="padding:10px 0;font-size:14px;color:#444;line-height:1.75;">{text}</td></tr>'
     )
     return f"""
-      <div style="margin:0 0 16px;border-radius:6px;overflow:hidden;border:1px solid #e8e8e8;">
-        <div style="background:{AC};padding:9px 18px;">
-          <span style="font-size:11px;font-weight:700;letter-spacing:.1em;
-            text-transform:uppercase;color:#fff;">{heading}</span>
+      <div style="margin:0 0 28px;">
+        <div style="display:flex;align-items:center;margin-bottom:12px;">
+          <div style="width:3px;height:16px;background:#FF3B00;border-radius:2px;margin-right:10px;"></div>
+          <span style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#999;">{heading}</span>
         </div>
-        <div style="background:#fafafa;padding:6px 18px 4px;">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0">{rows}</table>
-        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">{rows}</table>
       </div>"""
 
 def send_email(to_email: str, summary: str) -> None:
@@ -507,34 +504,49 @@ def send_email(to_email: str, summary: str) -> None:
     AC = "#FF3B00"
 
     html = f"""
-    <div style="background:#f0f0f0;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
+    <div style="background:#e8e8e4;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
     <div style="max-width:600px;margin:0 auto;">
-      <div style="background:#0D0D0B;border-radius:8px 8px 0 0;padding:18px 28px;">
-        <span style="font-size:20px;font-weight:900;letter-spacing:.06em;color:#fff;">
-          EAR<span style="color:{AC};">NOTE</span>
-        </span>
-      </div>
-      <div style="background:#fff;padding:28px 28px 12px;border:1px solid #e8e8e8;border-top:none;">
-        <h1 style="font-size:22px;font-weight:700;color:#0D0D0B;line-height:1.3;margin:0 0 12px;">
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0"
+        style="background:#0D0D0B;border-radius:10px 10px 0 0;">
+        <tr>
+          <td style="padding:22px 32px;">
+            <span style="font-size:22px;font-weight:900;letter-spacing:.08em;color:#fff;">
+              EAR<span style="color:{AC};">NOTE</span>
+            </span>
+          </td>
+          <td style="padding:22px 32px;text-align:right;">
+            <span style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#555;">Podcast Brief</span>
+          </td>
+        </tr>
+      </table>
+
+      <div style="background:#ffffff;padding:36px 36px 24px;border-left:1px solid #ddd;border-right:1px solid #ddd;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:{AC};margin-bottom:10px;">Episode Brief</div>
+        <h1 style="font-size:26px;font-weight:700;color:#0D0D0B;line-height:1.25;margin:0 0 20px;font-family:Georgia,'Times New Roman',serif;">
           {parsed["title"]}
         </h1>
-        <p style="font-size:15px;color:#555;line-height:1.65;margin:0 0 20px;
-          padding-bottom:20px;border-bottom:3px solid {AC};">
+        <p style="font-size:15px;color:#444;line-height:1.75;margin:0 0 28px;">
           {parsed["overview"]}
         </p>
+        <div style="height:1px;background:#f0f0f0;margin-bottom:28px;"></div>
         {cards_html}
       </div>
-      <div style="background:#f9f9f9;border:1px solid #e8e8e8;border-top:none;
-        border-radius:0 0 8px 8px;padding:16px 28px;text-align:center;">
-        <p style="font-size:13px;color:#888;margin:0 0 4px;">
-          Made with <a href="https://earnote.app" style="color:{AC};text-decoration:none;
-          font-weight:600;">Earnote</a>
-          &nbsp;·&nbsp; Know someone who never finishes their queue? Forward this.
-        </p>
-        <p style="font-size:11px;color:#bbb;margin:6px 0 0;">
-          {datetime.now().strftime('%d %b %Y, %H:%M UTC')}
-        </p>
-      </div>
+
+      <table width="100%" cellpadding="0" cellspacing="0" border="0"
+        style="background:#0D0D0B;border-radius:0 0 10px 10px;">
+        <tr>
+          <td style="padding:16px 32px;">
+            <span style="font-size:11px;color:#555;font-family:Arial,sans-serif;">
+              {datetime.now().strftime('%d %b %Y')}
+            </span>
+          </td>
+          <td style="padding:16px 32px;text-align:right;">
+            <a href="https://earnote.app" style="font-size:11px;color:{AC};text-decoration:none;font-weight:700;letter-spacing:.04em;">earnote.app</a>
+          </td>
+        </tr>
+      </table>
+
     </div>
     </div>"""
 
